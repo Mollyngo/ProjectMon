@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum User_role {
+  USER
+  ADMIN
+}
+
+enum Clinic_status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Clinic_visibility {
+  VISIBLE
+  HIDDEN
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  first_name String
+  last_name  String?
+  email      String    @unique
+  mobile     String?   @unique
+  password   String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  role       User_role
+  clinics    Clinic[] //# User can create and manage multiple clinics
+}
+
+model Clinic {
+  id          Int               @id @default(autoincrement())
+  name        String
+  info_id     Int
+  district_id Int
+  user_id     Int
+  user        User              @relation(fields: [user_id], references: [id]) //  # Redundant for clarity
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  status      Clinic_status     @default(PENDING) //# Start as PENDING
+  visibility  Clinic_visibility @default(HIDDEN) //# Initially hidden
+  info        Info              @relation(fields: [info_id], references: [id])
+  district    District          @relation(fields: [district_id], references: [id])
+}
+
+model Info {
+  id           Int      @id @default(autoincrement())
+  mobile       String
+  working_hour String?
+  website      String?
+  service      String?
+  others       String?
+  photo        String?
+  clinic       Clinic[]
+}
+
+model District {
+  id          Int      @id @default(autoincrement())
+  name        String
+  province_id Int
+  province    Province @relation(fields: [province_id], references: [id])
+
+  Clinic Clinic[]
+}
+
+model Province {
+  id        Int        @id @default(autoincrement())
+  name      String
+  districts District[]
+}
