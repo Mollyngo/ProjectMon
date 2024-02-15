@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import head from '../assets/head.png'
 
 export default function Search() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -9,6 +10,17 @@ export default function Search() {
 
     return (
         <div className="container flex flex-col mx-auto p-4">
+            <div className="hero h-96" style={{ backgroundImage: 'url("' + head + '")' }}>
+                <div className="hero-overlay bg-opacity-60"></div>
+                <div className="hero-content text-center text-neutral-content">
+                    <div className="max-w-md">
+                        {/* <h1 className="mb-5 text-5xl font-bold">Hello there</h1>
+                        <p className="mb-5">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p> */}
+                        <button className="btn btn-primary">Get Started</button>
+                    </div>
+                </div>
+            </div>
+            <br />
             <div className="join">
                 <div className='w-full'>
                     <div className="join-item ">
@@ -67,7 +79,7 @@ export default function Search() {
             </button>
             <br />
 
-            <button className="btn-secondary btn">
+            <button className="btn-secondary btn" onClick={() => window.location.href = '/login'}>
                 เข้าสู่ระบบ / ลงทะเบียน</button>
         </div>
     );

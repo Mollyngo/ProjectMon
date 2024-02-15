@@ -1,18 +1,12 @@
 const express = require("express");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 const app = express();
-app.use(require('./middleware/auth'));
+const authRoute = require('./src/routes/auth-route')
 
 
 
 app.use(express.json());
 
-const userRoutes = require('./routes/userRoutes');
-const clinicRoutes = require('./routes/clinicRoutes');
-
-app.use('/api/user', userRoutes);
-app.use('/api/clinic', clinicRoutes);
+app.use('/auth', authRoute)
 
 
 app.listen(8000, () => {

@@ -1,92 +1,148 @@
 const bcrypt = require('bcrypt');
+const userService = require('../services/user-service');
+const jwt = require('jsonwebtoken');
 
-const saltRounds = 10;
+// const saltRounds = 10;
 
-const hashPassword = async (password) => {
-    const salt = await bcrypt.genSalt(saltRounds);
-    return await bcrypt.hash(password, salt);
-};
+// const hashPassword = async (password) => {
+//     const salt = await bcrypt.genSalt(saltRounds);
+//     return await bcrypt.hash(password, salt);
+// };
 
-const auth = require('./middleware/auth');
+// const auth = require('./middleware/auth');
 
 const roles = {
-    admin: ['create', 'update', 'delete'],
-    user: ['read'],
-};
+    admin: ['create', 'read', 'update', 'delete', 'approve'],
+    user: ['create', 'read', 'update'],
+}
+
 
 const hasPermission = (role, permission) => {
     return roles[role].includes(permission);
 };
 
-app.get('/clinics', auth, (req, res) => {
-    // ตรวจสอบสิทธิ์
-    if (!hasPermission(req.user.role, 'read')) {
-        return res.status(403).send('Forbidden');
-    }
+// app.get('/clinics', auth, (req, res) => {
+//     // ตรวจสอบสิทธิ์
+//     if (!hasPermission(req.user.role, 'read')) {
+//         return res.status(403).send('Forbidden');
+//     }
 
-    // ค้นหาคลินิก
-    const clinics = await Clinic.findAll();
-    res.send(clinics);
-});
+//     // ค้นหาคลินิก
+//     const clinics = await Clinic.findAll();
+//     res.send(clinics);
+// });
 
-app.post('/register', async (req, res) => {
-    const { email, password, role } = req.body;
+const SECRET_KEY = process.env.JWT_SECRET || '1234dfcf5';
+const EXPIRES_IN = process.env.JWT_EXPIRES;
 
-    // ตรวจสอบ Field
-    if (!validateEmail(email) || !validatePassword(password)) {
-        return res.status(400).send('Invalid field');
-    }
+exports.register = async (req, res, next) => {
+    const { first_name, last_name, email, password, mobile, role } = req.body;
 
-    // Hash รหัสผ่าน
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // บันทึกผู้ใช้
-    const user = await User.create({ email, password: hashedPassword, role });
+    const newUser = await userService.createUser({
+        first_name,
+        last_name,
+        email,
+        mobile,
+        password: hashedPassword,
+        role
+    });
 
-    // ส่ง Token
-    const token = generateToken(user);
-    res.send({ token });
-});
 
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    // ตรวจสอบ email
+    // if (existsUser) {
+    //     return res.status(400).send('Email already exists');
+    // };
 
-    // ค้นหาผู้ใช้
-    const user = await User.findOne({ where: { email } });
-
-    // ตรวจสอบรหัสผ่าน
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).send('Invalid credentials');
-    }
 
     // ส่ง Token
-    const token = generateToken(user);
-    res.send({ token });
-});
 
-const validateEmail = (email) => {
-    const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex.test(email);
+    const token = jwt.sign({ id: newUser.id }, SECRET_KEY, { expiresIn: EXPIRES_IN });
+    res.status(200).json({ token, newUser });
 };
 
-const validatePassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^
+exports.login = async (req, res, next) => {
+    const { email, password } = req.body;
 
-    Authentication Controller:
+    const existsUser = await userService.findUserByEmail(email);
 
-    การเข้าสู่ระบบ:
-    ฟังก์ชันสำหรับตรวจสอบข้อมูลรับรองผู้ใช้
-ฟังก์ชันสำหรับสร้างและส่ง JWT token
-การรีเฟรช token:
-ฟังก์ชันสำหรับตรวจสอบและรีเฟรช token ที่หมดอายุ
-    การตรวจสอบสิทธิ์:
-    ฟังก์ชันสำหรับตรวจสอบสิทธิ์ผู้ใช้
-ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้จาก token
-    ข้อมูลทั่วไป:
+    // ตรวจสอบ email
+    if (!existsUser || !bcrypt.compareSync(password, existsUser.password)) {
+        return res.status(401).send('Invalid email or password');
+    }
 
-การจัดการ error:
-ฟังก์ชันสำหรับจัดการ error ต่างๆ
-ฟังก์ชันสำหรับส่ง response ที่เหมาะสม
-    การบันทึก:
-    ฟังก์ชันสำหรับบันทึกกิจกรรมต่างๆ
-    ฟังก์ชันสำหรับติดตามข้อผิดพลาด
+    const token = jwt.sign({ id: existsUser.id }, process.env.JWT_SECRET, { expiresIn: '90 days' });
+
+    res.status(200).json("login success");
+
+}
+
+exports.logout = async (req, res, next) => {
+    res.send(200).json({ message: 'Logout successfully' });
+
+}
+
+
+
+// app.post('/register', async (req, res) => {
+//     const { email, password, role } = req.body;
+
+//     // ตรวจสอบ Field
+//     if (!validateEmail(email) || !validatePassword(password)) {
+//         return res.status(400).send('Invalid field');
+//     }
+
+//     // Hash รหัสผ่าน
+//     const hashedPassword = await hashPassword(password);
+
+//     // บันทึกผู้ใช้
+//     const user = await User.create({ email, password: hashedPassword, role });
+
+//     // ส่ง Token
+//     const token = generateToken(user);
+//     res.send({ token });
+// });
+
+// app.post('/login', async (req, res) => {
+//     const { email, password } = req.body;
+
+//     // ค้นหาผู้ใช้
+//     const user = await User.findOne({ where: { email } });
+
+//     // ตรวจสอบรหัสผ่าน
+//     if (!user || !(await bcrypt.compare(password, user.password))) {
+//         return res.status(401).send('Invalid credentials');
+//     }
+
+//     // ส่ง Token
+//     const token = generateToken(user);
+//     res.send({ token });
+// });
+
+// const validateEmail = (email) => {
+//     const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//     return regex.test(email);
+// };
+
+// const validatePassword = (password) => {
+//     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^
+
+//     Authentication Controller:
+
+//     การเข้าสู่ระบบ:
+//     ฟังก์ชันสำหรับตรวจสอบข้อมูลรับรองผู้ใช้
+// ฟังก์ชันสำหรับสร้างและส่ง JWT token
+// การรีเฟรช token:
+// ฟังก์ชันสำหรับตรวจสอบและรีเฟรช token ที่หมดอายุ
+//     การตรวจสอบสิทธิ์:
+//     ฟังก์ชันสำหรับตรวจสอบสิทธิ์ผู้ใช้
+// ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้จาก token
+//     ข้อมูลทั่วไป:
+
+// การจัดการ error:
+// ฟังก์ชันสำหรับจัดการ error ต่างๆ
+// ฟังก์ชันสำหรับส่ง response ที่เหมาะสม
+//     การบันทึก:
+//     ฟังก์ชันสำหรับบันทึกกิจกรรมต่างๆ
+//     ฟังก์ชันสำหรับติดตามข้อผิดพลาด

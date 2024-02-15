@@ -2,7 +2,10 @@ export default function SearchResult() {
     return (
         <div>
             <div>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto mt-4">
+                    <div>
+                        <h1 className="text-2xl font-bold text-center">ผลการค้นหา</h1>
+                    </div>
                     <table className="table">
                         {/* head */}
                         <thead>
