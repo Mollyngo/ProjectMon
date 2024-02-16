@@ -1,19 +1,17 @@
 const express = require('express');
-const router = express.Router();
-const ClinicController = require('../controllers/ClinicController');
+const clinicController = require('../controllers/clinic-controller');
 
-router.post('/add', ClinicController.addClinic);
-router.put('/edit/:id', ClinicController.editClinic);
-router.delete('/delete/:id', ClinicController.deleteClinic);
-router.put('/approve/:id', ClinicController.approveClinic);
+const router = express.Router();
+
+router.post('/add', clinicController.addClinic);
 
 module.exports = router;
 
-การสมัครสมาชิก
-การเข้าสู่ระบบ
-ข้อมูลส่วนตัว
-การแก้ไขข้อมูล
-การจัดการคลินิก(เพิ่ม แก้ไข ลบ)
+// การสมัครสมาชิก
+// การเข้าสู่ระบบ
+// ข้อมูลส่วนตัว
+// การแก้ไขข้อมูล
+// การจัดการคลินิก(เพิ่ม แก้ไข ลบ)
 
 // app.get('/clinics', auth, async (req, res) => {
 //     const clinics = await prisma.clinic.findMany({
@@ -71,7 +69,7 @@ module.exports = router;
 
 
 // //เพิ่มข้อมูลคลินิก(โดย User):
-// //JavaScript
+
 // app.post('/clinics', auth, validateUser, async (req, res) => {
 //     const { name, district, province } = req.body;
 

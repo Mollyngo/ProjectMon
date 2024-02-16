@@ -11,15 +11,15 @@ const jwt = require('jsonwebtoken');
 
 // const auth = require('./middleware/auth');
 
-const roles = {
-    admin: ['create', 'read', 'update', 'delete', 'approve'],
-    user: ['create', 'read', 'update'],
-}
+// const roles = {
+//     admin: ['create', 'read', 'update', 'delete', 'approve'],
+//     user: ['create', 'read', 'update'],
+// }
 
 
-const hasPermission = (role, permission) => {
-    return roles[role].includes(permission);
-};
+// const hasPermission = (role, permission) => {
+//     return roles[role].includes(permission);
+// };
 
 // app.get('/clinics', auth, (req, res) => {
 //     // ตรวจสอบสิทธิ์
@@ -36,45 +36,47 @@ const SECRET_KEY = process.env.JWT_SECRET || '1234dfcf5';
 const EXPIRES_IN = process.env.JWT_EXPIRES;
 
 exports.register = async (req, res, next) => {
-    const { first_name, last_name, email, password, mobile, role } = req.body;
+    try {
+        const { first_name, last_name, email, password, mobile, role } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await userService.createUser({
-        first_name,
-        last_name,
-        email,
-        mobile,
-        password: hashedPassword,
-        role
-    });
+        const newUser = await userService.createUser({
+            first_name,
+            last_name,
+            email,
+            mobile,
+            password: hashedPassword,
+            role
+        });
+        const token = jwt.sign({ id: newUser.id }, SECRET_KEY, { expiresIn: EXPIRES_IN });
 
+        res.status(200).json({ token, newUser });
+    } catch (error) {
+        res.status(500).send('สมัครไม่สําเร็จ');
+    }
 
-    // ตรวจสอบ email
-    // if (existsUser) {
-    //     return res.status(400).send('Email already exists');
-    // };
-
-
-    // ส่ง Token
-
-    const token = jwt.sign({ id: newUser.id }, SECRET_KEY, { expiresIn: EXPIRES_IN });
-    res.status(200).json({ token, newUser });
 };
 
 exports.login = async (req, res, next) => {
-    const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    const existsUser = await userService.findUserByEmail(email);
+        const existsUser = await userService.findUserByEmail(email);
 
-    // ตรวจสอบ email
-    if (!existsUser || !bcrypt.compareSync(password, existsUser.password)) {
-        return res.status(401).send('Invalid email or password');
+        // ตรวจสอบ email
+        if (!existsUser || !bcrypt.compareSync(password, existsUser.password)) {
+            return res.status(401).send('Invalid email or password');
+        }
+
+        const token = jwt.sign({ id: existsUser.id }, SECRET_KEY, { expiresIn: EXPIRES_IN });
+
+        console.log(token);
+        res.status(200).json("ล็อกอินสําเร็จ");
+    } catch (error) {
+        res.status(500).send('เข้าสู่ระบบไม่สําเร็จ');
     }
 
-    const token = jwt.sign({ id: existsUser.id }, process.env.JWT_SECRET, { expiresIn: '90 days' });
-
-    res.status(200).json("login success");
 
 }
 

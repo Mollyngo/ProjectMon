@@ -9,17 +9,6 @@ router.post('/login', authController.login);
 
 module.exports = router;
 
-// // Import modules
-// const express = require('express');
-// const prisma = require('@prisma/client');
-// const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
-// const joi = require('joi');
-
-// // App setup
-// const app = express();
-// app.use(express.json());
-
 // // Middleware
 // const auth = (req, res, next) => {
 //     const token = req.headers['authorization'];

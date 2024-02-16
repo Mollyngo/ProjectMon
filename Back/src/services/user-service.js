@@ -19,8 +19,7 @@ exports.findUserById = async (id) => {
 exports.createUser = async (user) => {
     return await prisma.user.create({
         data: user
-
-    });
+    })
 }
 
 exports.updateUser = async (user) => {
