@@ -1,36 +1,55 @@
 const clinicService = require('../services/clinic-service');
+const prisma = require('../model/prisma');
+const createError = require('../utills/create-error');
+const catchError = require('../utills/catch-error');
+
+const jwt = require('jsonwebtoken');
 
 
 exports.addClinic = async (req, res, next) => {
     try {
-        const { name, address, district, province, mobile, working_hour, website, service, others } = req.body;
-        const newClinic = await clinicService.createClinic(req.body);
-        const token = jwt.sign({ id: newClinic.id }, SECRET_KEY, { expiresIn: EXPIRES_IN });
-        const clinic = await clinicService.findClinicById(newClinic.id);
-        const user = await userService.findUserById(newClinic.user_id);
+        const {  name, district, province, mobile, working_hour, website, service, others, photo } = req.body;
 
-        // const { name, address, district, province, mobile, working_hour, website, service, others } = req.body;
+        const user_id = req.user_id;
 
-        // const newClinic = await clinicService.createClinic({
-        //     name,
-        //     address,
-        //     district,
-        //     province,
-        //     mobile,
-        //     working_hour,
-        //     website,
-        //     service,
-        //     others
-        // });
-
-
+        const newClinic = await clinicService.createClinic({
+            name,
+            district,
+            province,
+            mobile,
+            working_hour,
+            website,
+            service,
+            others,
+            photo,
+        }, user_id);
+        console.log(createError)
+        console.log(catchError)
+        console.log(req.body)
         console.log(newClinic);
-        res.status(201).json({ newClinic });
+        res.status(200).json(newClinic);
+    } catch (error) {
+        console.error(error);
+        res.status(error.statusCode || 500).json({ message: error.message }); // Pass error message
+    }
+};
+
+
+exports. getClinics = async (req, res, next) => {
+    try {
+        const clinics = await clinicService.findClinics();
+        res.status(200).json({ clinics });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'เพิ่มคลินิกไม่สําเร็จ' });
-        next(error);
+        res.status(500).json({ message: 'หาคลินิกไม่สําเร็จ' });
     }
+
+}
+
+exports.searchClinic = async (req, res, next) => {
+   res.status(200).json({ msg: 'searchClinic' });
+    console.log(req.body)
+    console.log(res)
 }
 
 
@@ -167,53 +186,6 @@ exports.addClinic = async (req, res, next) => {
 
 
 
-// const ClinicController = {
-//     // ฟังก์ชันสำหรับการเพิ่มคลินิกใหม่
-//     async addClinic(req, res) {
-//         try {
-//             // โค้ดสำหรับการเพิ่มคลินิกใหม่
-//         } catch (error) {
-//             console.error('Error adding clinic:', error);
-//             res.status(500).json({ error: 'An error occurred while adding clinic' });
-//         }
-//     },
-
-//     // ฟังก์ชันสำหรับการแก้ไขข้อมูลคลินิก
-//     async editClinic(req, res) {
-//         try {
-//             // โค้ดสำหรับการแก้ไขข้อมูลคลินิก
-//         } catch (error) {
-//             console.error('Error editing clinic:', error);
-//             res.status(500).json({ error: 'An error occurred while editing clinic' });
-//         }
-//     },
-
-//     // ฟังก์ชันสำหรับการลบคลินิก
-//     async deleteClinic(req, res) {
-//         try {
-//             // โค้ดสำหรับการลบคลินิก
-//         } catch (error) {
-//             console.error('Error deleting clinic:', error);
-//             res.status(500).json({ error: 'An error occurred while deleting clinic' });
-//         }
-//     },
-
-//     // ฟังก์ชันสำหรับการอนุมัติคลินิกโดยผู้ดูแลระบบ
-//     async approveClinic(req, res) {
-//         try {
-//             // โค้ดสำหรับการอนุมัติคลินิก
-//         } catch (error) {
-//             console.error('Error approving clinic:', error);
-//             res.status(500).json({ error: 'An error occurred while approving clinic' });
-//         }
-//     }
-// };
-
-// module.exports = ClinicController;
-
-
-
-// Clinic Controller:
 
 // การค้นหา:
 // ฟังก์ชันสำหรับค้นหาคลินิกตามชื่อ เขต จังหวัด ฯลฯ
@@ -233,24 +205,3 @@ exports.addClinic = async (req, res, next) => {
 
 
 
-
-// // exports.getClinic = async (req, res) => {
-// //     const clinic = await Clinic.findByName(req.params.name);
-// //     res.json(clinic);
-// // };
-
-// // exports.createClinic = async (req, res) => {
-// //     const clinic = new Clinic(req.body);
-// //     await clinic.save();
-// //     res.status(201).json(clinic);
-// // };
-
-// // exports.updateClinic = async (req, res) => {
-// //     const clinic = await Clinic.findByIdAndUpdate(req.params.id, req.body, { new: true });
-// //     res.json(clinic);
-// // };
-
-// // exports.deleteClinic = async (req, res) => {
-// //     await Clinic.findByIdAndDelete(req.params.id);
-// //     res.status(204).json();
-// // };

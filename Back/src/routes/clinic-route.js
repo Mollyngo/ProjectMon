@@ -4,6 +4,7 @@ const clinicController = require('../controllers/clinic-controller');
 const router = express.Router();
 
 router.post('/add', clinicController.addClinic);
+router.get('/add', clinicController.searchClinic);
 
 module.exports = router;
 
