@@ -34,6 +34,43 @@ exports.addClinic = async (req, res, next) => {
     }
 };
 
+exports.updatedClinic = async (req, res, next) => {
+    try {
+        const { name, district, province, mobile, working_hour, website, service, others, photo } = req.body;
+        const user_id = req.user_id;
+        const updatedClinic = await clinicService.editClinic({
+            name,
+            district,
+            province,
+            mobile,
+            working_hour,
+            website,
+            service,
+            others,
+            photo
+        }, user_id);
+        console.log(updatedClinic);
+        res.status(200).json(updatedClinic);
+
+    } catch (error) {
+        console.error(error);
+        res.status(error.statusCode || 500).json({ message: error.message });
+    }
+};
+
+exports.deletedClinic = async (req, res, next) => {
+    try {
+        const { name } = req.body;
+        const user_id = req.user_id;
+        const deletedClinic = await clinicService.deleteClinic({
+            name
+        })
+        res.status(200).json(deletedClinic);
+    } catch (error) {
+        console.error(error);
+        res.status(error.statusCode || 500).json({ message: error.message });
+    }
+}
 
 exports. getClinics = async (req, res, next) => {
     try {

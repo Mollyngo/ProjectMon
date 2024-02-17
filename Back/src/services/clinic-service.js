@@ -42,13 +42,37 @@ exports.createClinic = async (clinicData, user_id) => { // Separate function wit
 
 
 
-exports.updateClinic = async (clinic) => {
+exports.editClinic = async (clinic) => {
     return await prisma.clinic.update({
         where: {
             name: clinic.name
+
         },
-        data: clinic
-    });
+        data: {
+            name: clinic.name,
+            info: {
+                update: {
+                    mobile: clinic.mobile,
+                    working_hour: clinic.working_hour,
+                    website: clinic.website,
+                    service: clinic.service,
+                    others: clinic.others,
+                    photo: clinic.photo,
+
+                },
+            },
+            district: {
+                update: {
+                    name: clinic.district,
+                    province: {
+                        update: {
+                            name: clinic.province,
+                        }
+                    }
+                }
+            }
+        }
+    })
 }
 
 exports.deleteClinic = async (clinic) => {

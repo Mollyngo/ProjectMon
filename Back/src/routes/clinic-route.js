@@ -5,6 +5,9 @@ const router = express.Router();
 
 router.post('/add', clinicController.addClinic);
 router.get('/add', clinicController.searchClinic);
+router.get('/search', clinicController.searchClinic);
+router.patch('/update', clinicController.updatedClinic);
+router.delete('/delete', clinicController.deletedClinic);
 
 module.exports = router;
 
