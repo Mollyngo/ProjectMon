@@ -4,10 +4,9 @@ const clinicController = require('../controllers/clinic-controller');
 const router = express.Router();
 
 router.post('/add', clinicController.addClinic);
-router.get('/add', clinicController.searchClinic);
 router.get('/search', clinicController.searchClinic);
-router.patch('/update', clinicController.updatedClinic);
-router.delete('/delete', clinicController.deletedClinic);
+router.patch('/:id', clinicController.updatedClinic);
+router.delete('/:id', clinicController.deletedClinic);
 
 module.exports = router;
 

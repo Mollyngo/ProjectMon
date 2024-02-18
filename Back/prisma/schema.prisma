@@ -49,6 +49,8 @@ model Clinic {
   visibility  Clinic_visibility @default(HIDDEN) //# Initially hidden
   info        Info              @relation(fields: [info_id], references: [id])
   district    District          @relation(fields: [district_id], references: [id])
+
+  @@index([district_id], name: "custom_index_name")
 }
 
 model Info {
@@ -63,16 +65,27 @@ model Info {
 }
 
 model District {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @default(0)
+  code        String
   name        String
+  name_en     String
   province_id Int
   province    Province @relation(fields: [province_id], references: [id])
-
-  Clinic Clinic[]
+  clinic      Clinic[]
 }
 
 model Province {
-  id        Int        @id @default(autoincrement())
-  name      String
-  districts District[]
+  id           Int        @id @default(0)
+  code         String
+  name         String
+  name_en      String
+  geography_id Int
+  geography    Geography  @relation(fields: [geography_id], references: [id])
+  district     District[]
+}
+
+model Geography {
+  id       Int        @id @default(0)
+  name     String
+  province Province[]
 }

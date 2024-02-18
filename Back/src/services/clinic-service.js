@@ -1,5 +1,7 @@
 const prisma = require('../model/prisma');
 
+
+
 exports.createClinic = async (clinicData, user_id) => { // Separate function with clear arguments
     try {
         // Add data validation and error handling here as needed
@@ -18,16 +20,12 @@ exports.createClinic = async (clinicData, user_id) => { // Separate function wit
                     },
                 },
                 district: {
-                    create: {
-                        name: clinicData.district,
-                        province: {
-                            create: {
-                                name: clinicData.province,
-                            },
-                        },
-                    },
-                },
+                    connect: {
+                        id: +clinicData.district_id,
 
+                    },
+
+                },
                 user: { connect: { id: user_id } }, // Connect using user ID
             },
         });
@@ -41,12 +39,10 @@ exports.createClinic = async (clinicData, user_id) => { // Separate function wit
 
 
 
-
 exports.editClinic = async (clinic) => {
     return await prisma.clinic.update({
         where: {
-            name: clinic.name
-
+            id: clinic.id
         },
         data: {
             name: clinic.name,
@@ -75,10 +71,18 @@ exports.editClinic = async (clinic) => {
     })
 }
 
-exports.deleteClinic = async (clinic) => {
-    return await prisma.clinic.delete({
-        where: {
-            name: clinic.name
-        }
-    });
+exports.deleteAllClinic = async (clinic) => {
+    try {
+        return await prisma.clinic.delete({
+            where: {
+                id: clinic.id
+            },
+            include: {
+                info: true,
+            }
+        })
+
+    } catch (error) {
+        throw error
+    }
 }

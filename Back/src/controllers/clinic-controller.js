@@ -6,22 +6,25 @@ const catchError = require('../utills/catch-error');
 const jwt = require('jsonwebtoken');
 
 
+
+
 exports.addClinic = async (req, res, next) => {
     try {
-        const {  name, district, province, mobile, working_hour, website, service, others, photo } = req.body;
+        const { name, district, province, mobile, working_hour, website, service, others, photo } = req.body;
 
         const user_id = req.user_id;
 
+        const district_id = req.body.district_id
+
         const newClinic = await clinicService.createClinic({
             name,
-            district,
-            province,
             mobile,
             working_hour,
             website,
             service,
             others,
             photo,
+            district_id
         }, user_id);
         console.log(createError)
         console.log(catchError)
@@ -34,11 +37,15 @@ exports.addClinic = async (req, res, next) => {
     }
 };
 
+
 exports.updatedClinic = async (req, res, next) => {
     try {
         const { name, district, province, mobile, working_hour, website, service, others, photo } = req.body;
+        const id = parseInt(req.params.id);
         const user_id = req.user_id;
+        
         const updatedClinic = await clinicService.editClinic({
+            id,
             name,
             district,
             province,
@@ -48,7 +55,8 @@ exports.updatedClinic = async (req, res, next) => {
             service,
             others,
             photo
-        }, user_id);
+        }, user_id
+        );
         console.log(updatedClinic);
         res.status(200).json(updatedClinic);
 
@@ -61,10 +69,13 @@ exports.updatedClinic = async (req, res, next) => {
 exports.deletedClinic = async (req, res, next) => {
     try {
         const { name } = req.body;
+        const id = parseInt(req.params.id);
         const user_id = req.user_id;
         const deletedClinic = await clinicService.deleteClinic({
+           id,
             name
-        })
+        }, user_id
+        )
         res.status(200).json(deletedClinic);
     } catch (error) {
         console.error(error);
@@ -238,7 +249,7 @@ exports.searchClinic = async (req, res, next) => {
 // การจัดการคลินิก(โดย Admin):
 // ฟังก์ชันสำหรับอนุมัติคลินิก
 // ฟังก์ชันสำหรับระงับคลินิก
-// ฟังก์ชันสำหรับลบคลินิก(ถาวร)
+
 
 
 
