@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken');
 
 exports.addClinic = async (req, res, next) => {
     try {
-        const { name, district, province, mobile, working_hour, website, service, others, photo } = req.body;
+        const { name,  mobile, working_hour, website, service, others, photo } = req.body;
 
         const user_id = req.user_id;
 
@@ -40,68 +40,50 @@ exports.addClinic = async (req, res, next) => {
 
 exports.updatedClinic = async (req, res, next) => {
     try {
-        const { name, district, province, mobile, working_hour, website, service, others, photo } = req.body;
-        const id = parseInt(req.params.id);
+        const { id } = req.params;
+        const { name, mobile, working_hour, website, service, others, photo, district_id } = req.body;
         const user_id = req.user_id;
-        
         const updatedClinic = await clinicService.editClinic({
             id,
             name,
-            district,
-            province,
             mobile,
             working_hour,
             website,
             service,
             others,
-            photo
-        }, user_id
-        );
+            photo,
+            district_id
+        });
         console.log(updatedClinic);
         res.status(200).json(updatedClinic);
-
     } catch (error) {
         console.error(error);
-        res.status(error.statusCode || 500).json({ message: error.message });
     }
-};
+}
+
 
 exports.deletedClinic = async (req, res, next) => {
     try {
-        const { name } = req.body;
-        const id = parseInt(req.params.id);
-        const user_id = req.user_id;
-        const deletedClinic = await clinicService.deleteClinic({
-           id,
-            name
-        }, user_id
-        )
-        res.status(200).json(deletedClinic);
+        const { id } = req.params;
+        const deletedClinic = await clinicService.deleteClinic(id);
+        res.status(200).json(deletedClinic,{ message: "Clinic deleted successfully" });
     } catch (error) {
         console.error(error);
-        res.status(error.statusCode || 500).json({ message: error.message });
+        res.status(500).json({ message: "Error deleting clinic" });
     }
-}
+};
 
-exports. getClinics = async (req, res, next) => {
-    try {
-        const clinics = await clinicService.findClinics();
-        res.status(200).json({ clinics });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'หาคลินิกไม่สําเร็จ' });
-    }
-
-}
 
 exports.searchClinic = async (req, res, next) => {
-   res.status(200).json({ msg: 'searchClinic' });
-    console.log(req.body)
-    console.log(res)
+    try {
+        const { query } = req.query;
+        const result = await clinicService.searchClinic(query);
+        res.status(200).json(result);
+    }
+    catch (error) {
+        console.error(error);
+    }
 }
-
-
-
 
 
 // const isAuthorizedToDeleteClinic = (user, name) => {

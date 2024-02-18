@@ -5,13 +5,50 @@ const catchError = require('../utills/catch-error');
 
 const jwt = require('jsonwebtoken');
 
-exports.searchClinic = async (req, res, next) => {
+exports.searchClinicFromNameDistrictAndProvince = async (req, res, next) => {
     try {
-        const { query } = req.query;
-        const result = await clinicService.searchClinic(query);
-        res.status(200).json(result);
+        const { name, district, province } = req.query;
+
+        const where = {
+            deletedAt: null,
+        };
+
+        if (name) {
+            where.name = {
+                contains: name,
+            };
+        }
+
+        if (district) {
+            where.district = {
+                name: {
+                    contains: district,
+                },
+            };
+        }
+
+        if (province) {
+            where.district = {
+                province: {
+                    name: {
+                        contains: province,
+                    },
+                },
+            };
+        }
+
+        const result = await prisma.clinic.findMany({
+            where,
+            include: {
+                district: true,
+                province: true,
+                info: true
+
+            }
+        });
+
+        res.json(result);
     } catch (error) {
-        console.error(error);
-        res.status(error.statusCode || 500).json({ message: error.message }); // Pass error message
+        next(error);
     }
 }

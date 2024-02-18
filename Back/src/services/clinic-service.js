@@ -35,54 +35,86 @@ exports.createClinic = async (clinicData, user_id) => { // Separate function wit
     }
 };
 
+exports.editClinic = async (clinicData) => {
+    try {
+        const dataToUpdate = {};
 
+        if (clinicData.name) {
+            dataToUpdate.name = clinicData.name;
+        }
 
-
-
-exports.editClinic = async (clinic) => {
-    return await prisma.clinic.update({
-        where: {
-            id: clinic.id
-        },
-        data: {
-            name: clinic.name,
-            info: {
+        if (clinicData.mobile) {
+            dataToUpdate.info = {
                 update: {
-                    mobile: clinic.mobile,
-                    working_hour: clinic.working_hour,
-                    website: clinic.website,
-                    service: clinic.service,
-                    others: clinic.others,
-                    photo: clinic.photo,
-
+                    mobile: clinicData.mobile,
                 },
-            },
-            district: {
+            };
+        }
+
+        if (clinicData.working_hour) {
+            dataToUpdate.info = {
                 update: {
-                    name: clinic.district,
-                    province: {
-                        update: {
-                            name: clinic.province,
-                        }
-                    }
+                    working_hour: clinicData.working_hour,
+                },
+            };
+        }
+        if (clinicData.website) {
+            dataToUpdate.info = {
+                update: {
+                    website: clinicData.website,
                 }
             }
         }
-    })
-}
+        if (clinicData.service) {
+            dataToUpdate.info = {
+                update: {
+                    service: clinicData.service,
+                }
+            }
+        }
+        if (clinicData.others) {
+            dataToUpdate.info = {
+                update: {
+                    others: clinicData.others,
+                }
+            }
+        }
+        if (clinicData.photo) {
+            dataToUpdate.info = {
+                update: {
+                    photo: clinicData.photo,
+                }
+            }
+        }
+        if (clinicData.district_id) {
+            dataToUpdate.district = {
+                connect: {
+                    id: +clinicData.district_id,
+                },
+            };
+        }
+        return await prisma.clinic.update({
+            where: {
+                id: +clinicData.id,
+            },
+            data: dataToUpdate,
+        });
+        console.log(clinicData);
+    } catch (error) {
+        console.error("Error updating clinic:", error);
+        throw error;
+    }
+};
 
-exports.deleteAllClinic = async (clinic) => {
+exports.deleteClinic = async (id) => {
     try {
         return await prisma.clinic.delete({
             where: {
-                id: clinic.id
+                id,
             },
-            include: {
-                info: true,
-            }
-        })
-
+        });
     } catch (error) {
-        throw error
+        console.error("Error deleting clinic:", error);
+        throw error;
     }
-}
+};
