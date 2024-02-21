@@ -1,7 +1,7 @@
 const prisma = require('../model/prisma');
 
 exports.findUserByEmail = async (email) => {
-    return await prisma.user.findUnique({
+    return await prisma.user.findFirst({
         where: {
             email
         }
@@ -29,4 +29,8 @@ exports.updateUser = async (user) => {
         },
         data: user
     });
+}
+
+exports.getUsers = async () => {
+    return await prisma.user.findMany();
 }

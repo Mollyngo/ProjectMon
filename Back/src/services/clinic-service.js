@@ -118,3 +118,12 @@ exports.deleteClinic = async (id) => {
         throw error;
     }
 };
+
+exports.getApprovedVisibleClinics = async () => {
+    return await prisma.clinic.findMany({
+        where: {
+            status: 'APPROVED',
+            visibility: 'VISIBLE'
+        }
+    });
+}

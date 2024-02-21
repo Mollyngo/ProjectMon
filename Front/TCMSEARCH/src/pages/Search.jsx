@@ -1,12 +1,43 @@
-import { useState } from 'react';
-import head from '../assets/head.png'
+
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
+import head from '../assets/head.png';
 
 export default function Search() {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [province, setProvince] = useState('');
+    const [district, setDistrict] = useState('');
+    const [searchType, setSearchType] = useState('');
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const navigate = useNavigate();
+    // เรียกใช้งาน getProvinces และ getDistrictsByProvince โดยใช้ useEffect
+    useEffect(() => {
+        async function fetchData() {
+            const result = await getProvinces();
+            setProvinces(result);
+        }
+        fetchData();
+    }, []);
 
+    useEffect(() => {
+        async function fetchData() {
+            if (province) {
+                const result = await getDistrictsByProvince(province);
+                setDistricts(result);
+            }
+        }
+        fetchData();
+    }, [province]);
+
+    // handleSearch function
     const handleSearch = () => {
-        // ตรงนี้คุณสามารถเขียนโค้ดสำหรับการค้นหา Clinic ได้
+        const searchParams = new URLSearchParams();
+        searchParams.append('province', province);
+        searchParams.append('district', district);
+        searchParams.append('searchType', searchType); // เพิ่มการส่งประเภทของตาราง
+        history.push(`/searchResult?${searchParams.toString()}`);
     };
+
 
     return (
         <div className="container flex flex-col mx-auto p-4">
@@ -27,11 +58,15 @@ export default function Search() {
                         <input className="input input-primary w-full max-w-full join-item" placeholder="ค้นหา" />
                     </div>
                 </div>
-                <select className="select select-primary select-bordered join-item">
-                    <option disabled selected>ค้นหาจาก</option>
-                    <option>ชื่อ</option>
-                    <option>อำเภอ</option>
-                    <option>จังหวัด</option>
+                <select
+                    className="select select-primary select-bordered join-item"
+                    value={searchType}
+                    onChange={(e) => setSearchType(e.target.value)}
+                >
+                    <option value="">เลือกประเภทของตาราง</option>
+                    <option value="clinic">คลินิก</option>
+                    <option value="district">อำเภอ</option>
+                    <option value="province">จังหวัด</option>
                 </select>
                 <div className="indicator">
                     {/* <span className="indicator-item badge badge-secondary">new</span> */}
@@ -41,33 +76,37 @@ export default function Search() {
             <label className="form-control w-full max-w-full">
                 <div className="label">
                     <span className="label-text">จังหวัด</span>
-                    {/* <span className="label-text-alt">Alt label</span> */}
                 </div>
-                <select className="select select-secondary">
-                    <option disabled selected>จังหวัด</option>
-                    <option>Star Wars</option>
-                    <option>Harry Potter</option>
-                    <option>Lord of the Rings</option>
-                    <option>Planet of the Apes</option>
-                    <option>Star Trek</option>
+                <select
+                    className="select select-primary select-bordered join-item"
+                    value={province}
+                    onChange={(e) => setProvince(e.target.value)}
+                >
+                    <option value="">เลือกจังหวัด</option>
+                    {provinces.map((province) => (
+                        <option key={province.id} value={province.name}>
+                            {province.name}
+                        </option>
+                    ))}
                 </select>
-
             </label>
 
             <label className="form-control w-full max-w-full">
                 <div className="label">
                     <span className="label-text">อำเภอ</span>
-                    {/* <span className="label-text-alt">Alt label</span> */}
                 </div>
-                <select className="select select-secondary">
-                    <option disabled selected>อำเภอ</option>
-                    <option>Star Wars</option>
-                    <option>Harry Potter</option>
-                    <option>Lord of the Rings</option>
-                    <option>Planet of the Apes</option>
-                    <option>Star Trek</option>
+                <select
+                    className="select select-primary select-bordered join-item"
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
+                >
+                    <option value="">เลือกอำเภอ</option>
+                    {districts.map((district) => (
+                        <option key={district.id} value={district.name}>
+                            {district.name}
+                        </option>
+                    ))}
                 </select>
-
             </label>
 
             <br />

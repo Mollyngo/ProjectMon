@@ -30,14 +30,12 @@ exports.addClinic = async (req, res, next) => {
         console.log(catchError)
         console.log(req.body)
         console.log(newClinic);
-        res.status(200).json(newClinic);
+        res.status(200).json({clinic: newClinic});
     } catch (error) {
         console.error(error);
         res.status(error.statusCode || 500).json({ message: error.message }); // Pass error message
     }
 };
-
-
 exports.updatedClinic = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -60,20 +58,25 @@ exports.updatedClinic = async (req, res, next) => {
         console.error(error);
     }
 }
-
-
 exports.deletedClinic = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const deletedClinic = await clinicService.deleteClinic(id);
+        if(req.user.role !== 'admin'){
+            return res.status(403).json({ message: "You don't have permission to delete this clinic" });
+        } else {
+            const deletedClinic = await clinicService.deleteClinic(id);  
+            console.log(deletedClinic);
+            if (!deletedClinic) {
+                return res.status(404).json({ message: "Clinic not found" });
+            }
+        }
+       
         res.status(200).json(deletedClinic,{ message: "Clinic deleted successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error deleting clinic" });
     }
 };
-
-
 exports.searchClinic = async (req, res, next) => {
     try {
         const { query } = req.query;
@@ -85,18 +88,16 @@ exports.searchClinic = async (req, res, next) => {
     }
 }
 
+exports.searchResult = async (req, res, next) => {
+    try {
+        const { query } = req.query;
+        const result = await clinicService.getApprovedVisibleClinics(query);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
-// const isAuthorizedToDeleteClinic = (user, name) => {
-//     return user.role === 'admin' || user.name === name;
-// }
-
-// const isAuthorizedToEditClinic = (user, id) => {
-//     return user.role === 'admin,user' || user.id === id;
-// }
-
-// const isAuthorizedToShowClinic = (user, name) => {
-//     return user.role === 'admin' || user.name === name;
-// }
 
 // exports.editToShowClinic = async (req, res, next) => {
 //     const { name } = req.body;

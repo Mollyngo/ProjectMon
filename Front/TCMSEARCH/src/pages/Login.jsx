@@ -1,38 +1,21 @@
-import Joi from "joi";
-import { useState } from "react";
-// import { login } from "../api/auth-api";
-import { toast } from "react-toastify";
 
+import { useState } from "react";
+import { toast } from "react-toastify";
+import useAuth from "../hooks/use-auth";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import Register from "./Register";
+import validateLogin from "../validators/validateLogin";
 
 export default function Login() {
 
-    const validate = schema => input => {
-        const { error } = schema.validate(input, { abortEarly: false });
+    const [open, setOpen] = useState(false);
 
-        if (error) {
-            const result = error.details.reduce((acc, el) => {
-                acc[el.path[0]] = el.message;
-                return acc;
-            }, {});
-            return result;
-        }
-    };
-
-
-    const loginSchema = Joi.object({
-        email: Joi.string().required().message("กรุณากรอกอีเมล"),
-        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().message("กรุณากรอกรหัสผ่าน")
-
-    })
-    const validateLogin = input => {
-        const { error } = loginSchema.validate(input);
-        return error;
-    }
-
+    const { login } = useAuth();
 
     const [input, setInput] = useState({
-        email: "",
-        password: ""
+        email: '',
+        password: '',
     })
 
     const [error, setError] = useState({})
@@ -49,6 +32,7 @@ export default function Login() {
             toast.success("เข้าสู่ระบบสําเร็จ")
         } catch (error) {
             toast.error("เข้าสู่ระบบไม่สําเร็จ")
+            console.log(error)
         }
     }
 
@@ -57,7 +41,7 @@ export default function Login() {
     }
 
     return (
-        <div>
+        < div >
             <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content flex-col">
                     <div className="text-center lg:text-left">
@@ -66,12 +50,12 @@ export default function Login() {
 
                     </div>
                     <div className="card shrink-0 w-full mt-5  shadow-2xl bg-base-100">
-                        <form className="card-body " onSummit={handleSubmit}>
+                        <form className="card-body " onSubmit={handleSubmit}>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input
+                                <Input
                                     placeholder="email"
                                     name="email"
                                     className="input input-bordered"
@@ -83,30 +67,32 @@ export default function Login() {
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input
+                                <Input
                                     value={input.password}
+                                    name="password"
                                     placeholder="password"
                                     className="input input-bordered"
                                     onChange={handleChangeInput}
                                 />
-                                <label className="label">
+                                {/* <label className="label">
                                     <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-                                </label>
+                                </label> */}
                             </div>
-                            <div className="form-control mt-6">
-                                <button className="btn btn-primary" onClick={() => window.location.href = '/search'}>Login</button>
-                            </div>
+
+                            <Button bg="green" >Login </Button>
 
 
                         </form>
-                        <button className="btn btn-secondary" onClick={() => window.location.href = '/register'}>สมัครสมาชิก</button>
+                        <button className="btn btn-secondary m-2" onClick={() => setOpen(true)}>สมัครสมาชิก</button>
+                        {open && <Register open={open} setOpen={setOpen} />}
 
-                        <button className="btn btn-alternate" onClick={() => window.location.href = '/admin'}>ผู้ดูแล</button>
+                        <button className="btn btn-alternate m-2" onClick={() => window.location.href = '/admin'}>ผู้ดูแล</button>
 
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
+
     )
 }
 

@@ -9,13 +9,6 @@ router.put('/user/:id', UserController.updateUser);
 
 module.exports = router;
 
-
-การสมัครสมาชิก
-การเข้าสู่ระบบ
-ข้อมูลส่วนตัว
-การแก้ไขข้อมูล
-การจัดการคลินิก(เพิ่ม แก้ไข ลบ)
-
 // // Router สำหรับ Admin
 // app.use('/admin', require('./routes/admin'));
 
