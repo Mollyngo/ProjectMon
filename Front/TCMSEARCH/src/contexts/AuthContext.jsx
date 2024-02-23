@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from 'react';
 
 import * as auth from '../api/auth';
 import * as user from '../api/user';
+import * as clinic from '../api/clinic';
 import { getToken, removeToken, storeToken } from '../validators/localStorage';
 
 
@@ -14,9 +15,10 @@ export const AuthContext = createContext();
 export default function AuthContextProvider({ children }) {
     const [authUser, setAuthUser] = useState(null);
     const [initialLoading, setInitialLoading] = useState(true);
-
+    // ใน useEffect
     useEffect(() => {
-        if (getToken()) {
+        const token = getToken();
+        if (token) {
             auth
                 .fetchUser()
                 .then((response) => {
@@ -27,43 +29,56 @@ export default function AuthContextProvider({ children }) {
                 })
                 .finally(() => {
                     setInitialLoading(false);
-                })
+                });
         } else {
             setInitialLoading(false);
         }
     }, []);
 
-    const register = async user => {
-        const response = await auth.register(user);
-        setAuthUser(response.data.newUser);
-        storeToken(response.data.token);
-    }
+    // ใน login และ register
+    const register = async (user) => {
+        try {
+            const response = await auth.register(user);
+            setAuthUser(response.data.newUser);
+            storeToken(response.data.token);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-    const login = async credential => {
-        const response = await auth.login(credential);
-        setAuthUser(response.data.user);
-        storeToken(response.data.token);
-    }
+    const login = async (credential) => {
+        try {
+            const response = await auth.login(credential);
+            setAuthUser(response.data.user);
+            storeToken(response.data.token);
+            return response.data.user;
+            console.log(response.data.user);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
+    // ใน logout
     const logout = async () => {
         try {
             await auth.logout();
             setAuthUser(null);
             removeToken();
         } catch (error) {
-            return error.response.data;
+            console.log(error);
         }
-    }
+    };
 
-    const getClinicPageByUserAndAdmin = () => {
+    // ใน getClinicPageByUserAndAdmin, createClinic, editClinic
+    const getClinicPageByUserAndAdmin = async () => {
         try {
             const token = getToken();
-            const response = clinic.getClinicPageByUserAndAdmin(token);
+            const response = await clinic.getClinicPageByUserAndAdmin(token);
             setAuthUser(response.data.user);
         } catch (error) {
-            return error.response.data;
+            console.log(error);
         }
-    }
+    };
 
     const createClinic = async (FormData) => {
         try {
@@ -71,9 +86,9 @@ export default function AuthContextProvider({ children }) {
             const response = await clinic.createClinic(FormData, token);
             setAuthUser(response.data.user);
         } catch (error) {
-            return error.response.data;
+            console.log(error);
         }
-    }
+    };
 
     const editClinic = async (id, data) => {
         try {
@@ -81,10 +96,9 @@ export default function AuthContextProvider({ children }) {
             const response = await clinic.editClinic(id, data, token);
             setAuthUser(response.data.user);
         } catch (error) {
-            return error.response.data;
+            console.log(error);
         }
-
-    }
+    };
 
     return (
         <AuthContext.Provider

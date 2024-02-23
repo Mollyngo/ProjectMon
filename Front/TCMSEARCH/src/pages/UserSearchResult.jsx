@@ -1,45 +1,58 @@
-export default function UserSearchResult() {
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { getApprovedVisibleClinics } from '../api/clinic'; // Assuming you have an API client
+
+function UserSearchResult() {
+    const location = useLocation();
+    const [clinics, setClinics] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    // Parse search params from URL
+    const searchParams = new URLSearchParams(location.search);
+    const searchType = searchParams.get('searchType');
+    const clinicName = searchParams.get('clinicName');
+    const provinceId = searchParams.get('province');
+    const districtId = searchParams.get('district');
+
+    // Fetch clinic list on initial load
+    useEffect(() => {
+        async function fetchClinics() {
+            try {
+                const result = await getApprovedVisibleClinics({
+                    searchType,
+                    clinicName,
+                    provinceId,
+                    districtId,
+                });
+                setClinics(result);
+            } catch (error) {
+                console.error('Error fetching clinics:', error);
+                setErrorMessage('พบข้อผิดพลาดในการดึงข้อมูลคลินิก');
+            }
+        }
+        fetchClinics();
+    }, [searchType, clinicName, provinceId, districtId]);
+
+    // ... JSX code with clinic list rendering and error handling ...
+
     return (
         <div>
-            <div className="overflow-x-auto mt-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-center">ผลการค้นหา</h1>
-                </div>
-                <table className="table">
-                    {/* head */}
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>ชื่อคลินิก</th>
-                            <th>อำเภอ</th>
-                            <th>จังหวัด</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {/* row 1 */}
-                        <tr>
-                            <th>1</th>
-                            <td>Cy Ganderton</td>
-                            <td>Quality Control Specialist</td>
-                            <td>Blue</td>
-                        </tr>
-                        {/* row 2 */}
-                        <tr>
-                            <th>2</th>
-                            <td>Hart Hagerty</td>
-                            <td>Desktop Support Technician</td>
-                            <td>Purple</td>
-                        </tr>
-                        {/* row 3 */}
-                        <tr>
-                            <th>3</th>
-                            <td>Brice Swyre</td>
-                            <td>Tax Accountant</td>
-                            <td>Red</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <h1>ผลการค้นหา</h1>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {clinics.length === 0 && <p>ไม่พบคลินิกที่ตรงกับเกณฑ์การค้นหา</p>}
+            {clinics.length > 0 && (
+                <ul>
+                    {clinics.map((clinic) => (
+                        <li key={clinic.id}>
+                            <a href={`/clinic/${clinic.id}`}>{clinic.name}</a>
+                            <p>{clinic.address}</p>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
-    )
+    );
 }
+
+export default UserSearchResult;
+

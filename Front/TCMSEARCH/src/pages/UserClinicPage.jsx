@@ -1,46 +1,54 @@
-export default function UserClinicPage() {
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { searchClinics } from '../api/clinic';
+import { getDistricts } from '../api/clinic';
+
+
+const UserClinicPage = () => {
+    const { userId } = useParams();
+    const [clinics, setClinics] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    useEffect(() => {
+        async function fetchClinics() {
+            try {
+                const result = await searchClinics({ userId });
+                setClinics(result);
+            } catch (error) {
+                console.error('Error fetching clinics:', error);
+                setErrorMessage('เกิดข้อผิดพลาดในการดึงข้อมูลคลินิก'); // Handle errors gracefully
+            }
+        }
+        fetchClinics();
+    }, [userId]);
+
     return (
         <div>
-            <div>
-                <div>
-                    <form className="m-8 gap-y-5 flex flex-col">
-                        <div>
-                            <h2 className="text-3xl"> clinic.name </h2>
-                        </div>
-                        <div className="flex justify-between">
-                            <h3 className="text-xl"> ที่อยู่ </h3>
-                            <h4> 8/8 ถ. ถนน </h4>
-                        </div>
-                        <div className="flex justify-between">
-                            <h3 className="text-xl"> อำเภอ </h3>
-                            <h4 > อำเภอ </h4>
-                        </div>
-                        <div className="flex justify-between">
-                            <h3 className="text-xl"> จังหวัด </h3>
-                            <h4 > จังหวัด </h4>
-                        </div>
-                        <div className="flex justify-between">
-                            <p> เบอร์โทร</p>
-                            <p> โทรศัพท์ </p>
-                        </div>
-                        <div className="flex justify-between">
-                            <p> website</p>
-                            <p> เว็บไซต์ </p>
-                        </div>
-                        <div className="flex justify-between">
-                            <p> รายละเอียด </p>
-                            <p> รายละเอียด </p>
-                        </div>
-                        <div className="flex justify-between">
-                            <p> สถานะ </p>
-                            <p> สถานะ </p>
-                        </div>
-                    </form>
+            <h1>คลินิกของฉัน</h1>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {clinics.map((clinic) => (
+                <div key={clinic.id}>
+                    <h2>{clinic.name}</h2>
+                    <p>สถานะ: {clinic.status}</p>
+                    <p>การมองเห็น: {clinic.visibility}</p>
+                    <p>{clinic.info?.mobile}</p>
+                    <p>{clinic.info?.working_hour}</p>
+                    <p>{clinic.info?.website}</p>
+                    <p>{clinic.info?.service}</p>
+                    <p>{clinic.info?.others}</p>
+
+                    <img src={clinic.info?.photo} alt={clinic.name} />
+
+                    <p>{clinic.district?.name}</p>
+
+                    <button onClick={() => navigate(`/edit-clinic/${clinic.id}`)}>แก้ไข</button>
+
+                    {/* Add button to delete clinic if needed */}
+
                 </div>
-                <div>
-                    {/* <h3> รูปภาพ </h3> */}
-                </div>
-            </div>
+            ))}
         </div>
-    )
-}
+    );
+};
+
+export default UserClinicPage;

@@ -1,28 +1,35 @@
-export default function AdminMenu() {
-    return (
-        <div>
-            <div>
-                <div className="flex flex-col mt-5 items-center">
-                    <h1 className="text-2xl font-bold mb-4">หน้าAdmin</h1>
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
+import { AuthContext } from '../contexts/AuthContext';
 
-                    <button className="btn-primary btn mt-2 w-80"
-                    >Approve คลินิก</button>
-                    <button className="btn-secondary btn mt-2 w-80">เพิ่มคลินิก</button>
-                    <button className="btn-secondary btn mt-2 w-80">แก้ไขคลินิก</button>
-                    <button className="btn-secondary btn mt-2 w-80">ดูข้อมูลตลินิก</button>
-                    <button className="btn-accent btn mt-2 w-80">ลบคลินิก</button>
-                    {/* <button className="btn-primary btn mt-2 w-80">Item 1</button> */}
-                </div>
-            </div>
-            <div></div>
-            <div className="flex flex-col mt-5 items-center">
-                <button
-                    className="btn-alt btn mt-2 w-full"
-                    onClick={() => window.location.href = '/login'}
-                >
-                    ย้อนกลับ
-                </button>
-            </div>
+function AdminMenu() {
+
+    // const { authUser } = useContext(AuthContext);
+
+    // const navigate = useNavigate()
+    // if (!authUser) {
+    //     return <Navigate to="/auth/login" />; // Redirect ไปหน้า login
+    // }
+
+    // const { role } = authUser; // ดึง role จาก user
+
+    // if (role !== 'ADMIN') {
+    //     return <Navigate to="/" />; // Redirect ไปหน้าหลัก
+    // }
+
+    return (
+        <div className="admin-menu flex flex-col">
+            <h1>เมนูผู้ดูแลระบบ</h1>
+            <ul className="flex flex-col gap-5">
+                <Button className="btn btn-primary" onClick={() => navigate('/add-clinic')}>เพิ่มคลินิก</Button>
+                <Button onClick={() => navigate('/edit-clinic')}>แก้ไขคลินิก</Button>
+                <Button onClick={() => navigate('/delete-clinic')}>ลบคลินิก</Button>
+                <Button onClick={() => navigate('/clinic-approve')}>อนุมัติคลินิก</Button>
+                <Button onClick={() => navigate('/users')}>ดูข้อมูลผู้ใช้</Button>
+            </ul>
         </div>
-    )
-}
+    );
+};
+
+export default AdminMenu;

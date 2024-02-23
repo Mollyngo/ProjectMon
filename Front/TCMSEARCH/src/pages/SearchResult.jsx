@@ -12,11 +12,13 @@ export default function SearchResult() {
     useEffect(() => {
         async function fetchData() {
             // นำเข้าฟังก์ชันที่ทำการค้นหาคลินิกที่มีสถานะเป็น "APPROVED" และมีสถานะการแสดงผลเป็น "VISIBLE"
+
             const result = await getApprovedVisibleClinics(province, district, searchType);
             setClinics(result);
         }
         fetchData();
     }, [province, district, searchType]);
+
     return (
         <div>
             <div>

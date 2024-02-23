@@ -3,78 +3,57 @@ const userService = require('../services/user-service');
 const jwt = require('jsonwebtoken');
 const createError = require('../utills/create-error');
 const catchError = require('../utills/catch-error');
+const jwtService = require('../services/jwt-service');
 
-
-const SECRET_KEY = process.env.JWT_SECRET || '1234dfcf5';
-const EXPIRES_IN = process.env.JWT_EXPIRES;
-
-exports.register = async (req, res, next) => {
-    try {
-        const existsUser = await userService.findUserByEmail(req.body.email);
-        if (existsUser) {
-            createError(400, 'มี email นี้ในระบบแล้ว');
-        }
-        const { first_name, last_name, email, password, mobile, role } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = await userService.createUser({
-            first_name,
-            last_name,
-            email,
-            mobile,
-            password: hashedPassword,
-            role
-        });
-        const payload = {
-            id: newUser.id
-        }
-        const token = jwt.sign(payload, SECRET_KEY, { expiresIn: EXPIRES_IN });
-
-        res.status(200).json({ token, newUser });
-    } catch (error) {
-        res.status(500).send('สมัครไม่สําเร็จ');
+exports.register = catchError(async (req, res, next) => {
+    const existsUser = await userService.findUserByEmail(req.body.email);
+    if (existsUser) {
+        createError(400, 'มี email นี้ในระบบแล้ว');
     }
+    const { first_name, last_name, email, password, mobile, role } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    req.body.password = hashedPassword;
+    const newUser = await userService.createUser(req.body);
+    const payload = { userId: newUser.id, role: newUser.role };
+    const accessToken = jwtService.sign(payload);
 
-};
 
-exports.login = async (req, res, next) => {
-    try {
-        const { email, password } = req.body;
-        console.log(email, password);
+    res.status(201).json({ accessToken, newUser });
 
-        const existsUser = await userService.findUserByEmail(req.body.email);
+});
 
-        // ตรวจสอบ email
-        if (!existsUser) {
-            createError(401, 'email หรือ password ไม่ถูกต้อง')
-        }
-        const isMatch = await bcrypt.compare(
-            req.body.password,
-            existsUser.password
-        );
-        if (!isMatch) {
-            createError(401, 'email หรือ password ไม่ถูกต้อง')
-        }
+exports.login = catchError(async (req, res, next) => {
+    const { email, password } = req.body;
+    console.log(email, password);
 
-        const payload = {
-            id: existsUser.id
-        }
+    const existsUser = await userService.findUserByEmail(req.body.email);
 
-        const token = jwt.sign(
-            payload, SECRET_KEY, { expiresIn: EXPIRES_IN });
-
-        console.log(token);
-        res.status(200).json({ token, user: existsUser });
-    } catch (error) {
-        res.status(500).send('เข้าสู่ระบบไม่สําเร็จ');
+    if (!existsUser) {
+        createError('invalid credentials', 400);
     }
-}
+    console.log(existsUser)
+    const isMatch = await bcrypt.compare(
+        req.body.password,
+        existsUser.password
+    );
+    if (!isMatch) {
+        createError('invalid credentials', 400);
+    }
+    console.log(isMatch)
+    const payload = {
+        userId: existsUser.id,
+        role: existsUser.role
+    };
+    console.log(payload)
+    const accessToken = jwtService.sign(payload);
+    delete existsUser.password;
 
-exports.logout = async (req, res, next) => {
-    res.send(200).json({ message: 'Logout successfully' });
+    res.status(200).json({ accessToken, user: existsUser });
+})
 
-}
-
-exports.getUser = async (req, res, next) => {
-    res.status(200).json({ user: req.user });
-}
+exports.logout = catchError(async (req, res, next) => {
+    res.status(200).json({ message: 'Logged out successfully' });
+})
+exports.getUser = catchError(async (req, res, next) => {
+    res.status(200).json({ user: req.user, role: req.user.role });
+})

@@ -1,33 +1,27 @@
 const createError = require('../utills/create-error');
 const catchError = require('../utills/catch-error');
-const prisma = require('../model/prisma');
-
-// const roles = {
-//     admin: ['create', 'read', 'update', 'delete', 'approve'],
-//     user: ['create', 'read', 'update'],
-// }
+const jwtService = require('../services/jwt-service');
+const userService = require('../services/user-service');
 
 const jwt = require('jsonwebtoken');
 
 const authenticate = catchError(async (req, res, next) => {
     try {
         const authorization = req.headers.authorization;
-
-        // Check if authorization header is present
-        if (!authorization) {
-            throw createError(401, 'Unauthorized: Authorization header required');
+        if (!authorization || !authorization.startsWith('Bearer ')) {
+            createError('invalid authorization header', 401);
         }
-
-        // Extract token from authorization header (assuming Bearer format)
         const token = authorization.split(' ')[1];
-        if (!token) {
-            throw createError(401, 'Unauthorized: Invalid token format');
-        }
+        const decodedPayload = jwtService.verify(token);
 
-        // Verify token and attach user data to request
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; // Assuming payload contains user information
-        req.user_id = decoded.id; // Extract user ID if available
+        const user = await userService.findUserById(decodedPayload.userId);
+        if (!user) {
+            createError('user was not found', 401);
+        }
+        delete user.password;
+        req.user = user;
+        req.user.role = user.role
+
         console.log(req.user_id)
         console.log(req.user)
         console.log(req.headers)

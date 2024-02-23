@@ -1,7 +1,9 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
+import { useNavigate } from 'react-router-dom';
 import head from '../assets/head.png';
+import { getProvinces, getDistrictsByProvince, searchClinics } from '../api/clinic'; // Assuming you have an API client
+
 
 export default function Search() {
     const [province, setProvince] = useState('');
@@ -9,34 +11,83 @@ export default function Search() {
     const [searchType, setSearchType] = useState('');
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
+    const [clinicName, setClinicName] = useState('');
     const navigate = useNavigate();
+
     // เรียกใช้งาน getProvinces และ getDistrictsByProvince โดยใช้ useEffect
-    useEffect(() => {
-        async function fetchData() {
-            const result = await getProvinces();
-            setProvinces(result);
-        }
-        fetchData();
-    }, []);
+    //  Fetch provinces on initial load
+
 
     useEffect(() => {
-        async function fetchData() {
-            if (province) {
-                const result = await getDistrictsByProvince(province);
-                setDistricts(result);
+        async function fetchProvinces() {
+            try {
+                const result = await getProvinces();
+                setProvinces(result);
+            } catch (error) {
+                console.error('Error fetching provinces:', error);
+                // Handle errors gracefully, e.g., display an error message
             }
         }
-        fetchData();
+        fetchProvinces();
+    }, []);
+
+    // Fetch districts based on selected province
+    useEffect(() => {
+        async function fetchDistricts() {
+            if (province) {
+                try {
+                    const result = await getDistrictsByProvince(province);
+                    setDistricts(result);
+                } catch (error) {
+                    console.error('Error fetching districts:', error);
+                    // Handle errors gracefully
+                }
+            } else {
+                setDistricts([]); // Clear districts if province is not selected
+            }
+        }
+        fetchDistricts();
     }, [province]);
 
-    // handleSearch function
-    const handleSearch = () => {
-        const searchParams = new URLSearchParams();
-        searchParams.append('province', province);
-        searchParams.append('district', district);
-        searchParams.append('searchType', searchType); // เพิ่มการส่งประเภทของตาราง
-        history.push(`/searchResult?${searchParams.toString()}`);
+
+
+    const handleSearch = async () => {
+        try {
+            let results;
+            const searchParams = new URLSearchParams();
+            if (searchType === 'clinic') {
+                // Search clinics by clinic name
+                if (clinicName) {
+                    searchParams.append('clinicName', clinicName);
+                }
+            } else if (searchType === 'province') {
+                // Search clinics by province
+                if (province) {
+                    searchParams.append('province', province);
+                }
+            } else if (searchType === 'district') {
+                // Search clinics by district
+                if (district) {
+                    searchParams.append('district', district);
+                }
+            }
+            // Call searchClinics API with the appropriate search parameters
+            results = await searchClinics(searchParams);
+
+            // Navigate to search results page with matched clinics (implement navigation logic)
+            // ทำการนำผลลัพธ์ไปแสดงผลในหน้า search results โดยใช้ข้อมูล results
+
+        } catch (error) {
+            console.error('Error searching clinics:', error);
+            // Handle errors gracefully
+        }
     };
+
+    const handleClickLogin = () => {
+        navigate('auth/login');
+    }
+
+
 
 
     return (
@@ -80,13 +131,12 @@ export default function Search() {
                 <select
                     className="select select-primary select-bordered join-item"
                     value={province}
+
                     onChange={(e) => setProvince(e.target.value)}
                 >
                     <option value="">เลือกจังหวัด</option>
-                    {provinces.map((province) => (
-                        <option key={province.id} value={province.name}>
-                            {province.name}
-                        </option>
+                    {province && province.map(province => (
+                        <option key={province.id} value={province.id}>{province.name}</option>
                     ))}
                 </select>
             </label>
@@ -101,7 +151,7 @@ export default function Search() {
                     onChange={(e) => setDistrict(e.target.value)}
                 >
                     <option value="">เลือกอำเภอ</option>
-                    {districts.map((district) => (
+                    {district && district.map(district => (
                         <option key={district.id} value={district.name}>
                             {district.name}
                         </option>
@@ -118,7 +168,7 @@ export default function Search() {
             </button>
             <br />
 
-            <button className="btn-secondary btn" onClick={() => window.location.href = '/login'}>
+            <button className="btn-secondary btn" onClick={handleClickLogin}>
                 เข้าสู่ระบบ / ลงทะเบียน</button>
         </div>
     );

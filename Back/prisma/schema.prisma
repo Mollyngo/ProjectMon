@@ -33,7 +33,7 @@ model User {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   role       User_role
-  clinics    Clinic[] //# User can create and manage multiple clinics
+  clinics    Clinic[]
 }
 
 model Clinic {
@@ -45,8 +45,8 @@ model Clinic {
   user        User              @relation(fields: [user_id], references: [id]) //  # Redundant for clarity
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
-  status      Clinic_status     @default(PENDING) //# Start as PENDING
-  visibility  Clinic_visibility @default(HIDDEN) //# Initially hidden
+  status      Clinic_status     @default(PENDING) 
+  visibility  Clinic_visibility @default(HIDDEN) 
   info        Info              @relation(fields: [info_id], references: [id])
   district    District          @relation(fields: [district_id], references: [id])
 
@@ -62,6 +62,8 @@ model Info {
   others       String?
   photo        String?
   clinic       Clinic[]
+
+  @@map("infos")
 }
 
 model District {
@@ -72,6 +74,8 @@ model District {
   province_id Int
   province    Province @relation(fields: [province_id], references: [id])
   clinic      Clinic[]
+
+  @@map("districts")
 }
 
 model Province {
@@ -82,10 +86,14 @@ model Province {
   geography_id Int
   geography    Geography  @relation(fields: [geography_id], references: [id])
   district     District[]
+
+  @@map("provinces")
 }
 
 model Geography {
   id       Int        @id @default(0)
   name     String
   province Province[]
+
+  @@map("geography")
 }

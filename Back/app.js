@@ -1,5 +1,4 @@
 const express = require("express");
-const app = express();
 const authRoute = require('./src/routes/auth-route')
 const clinicRoute = require('./src/routes/clinic-route')
 const authenticate = require("./src/middlewares/authMiddleware");
@@ -7,16 +6,17 @@ const notFound = require("./src/middlewares/notFound");
 const error = require("./src/middlewares/error");
 const cors = require('cors')
 
-app.use(express.json());
+const app = express();
 
+app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true // Include this line
 }));
 
-
 app.use('/auth', authRoute);
-app.use('/clinics', authenticate, clinicRoute)
+app.use('/clinic', clinicRoute)
+app.use('/user', authenticate, clinicRoute)
 
 
 

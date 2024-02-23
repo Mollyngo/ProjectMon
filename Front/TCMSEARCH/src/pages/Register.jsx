@@ -28,6 +28,7 @@ export default function Register({ onSuccess }) {
             const validateError = validateRegister(input);
             if (validateError) {
                 return setError(validateError);
+                
             }
 
             await register(input);

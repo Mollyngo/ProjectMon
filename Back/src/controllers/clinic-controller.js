@@ -79,12 +79,13 @@ exports.deletedClinic = async (req, res, next) => {
 };
 exports.searchClinic = async (req, res, next) => {
     try {
-        const { query } = req.query;
-        const result = await clinicService.searchClinic(query);
-        res.status(200).json(result);
-    }
-    catch (error) {
+        const { province, district } = req.query;
+        // ทำการค้นหาคลินิกตามจังหวัดและอำเภอที่ระบุ
+        const clinics = await Clinic.find({ 'district.name': district, 'district.province.name': province });
+        res.json(clinics);
+    } catch (error) {
         console.error(error);
+        res.status(500).json({ message: 'เกิดข้อผิดพลาดในการค้นหาคลินิก' });
     }
 }
 
