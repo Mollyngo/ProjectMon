@@ -2,89 +2,72 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import head from '../assets/head.png';
-import { getProvinces, getDistrictsByProvince, searchClinics } from '../api/clinic'; // Assuming you have an API client
+import { getProvinces, searchClinics, getDistricts } from '../api/clinic'; // Assuming you have an API client
 
 
 export default function Search() {
     const [province, setProvince] = useState('');
     const [district, setDistrict] = useState('');
-    const [searchType, setSearchType] = useState('');
-    const [provinces, setProvinces] = useState([]);
-    const [districts, setDistricts] = useState([]);
+    const [type, setType] = useState('');
     const [clinicName, setClinicName] = useState('');
     const navigate = useNavigate();
 
-    // เรียกใช้งาน getProvinces และ getDistrictsByProvince โดยใช้ useEffect
-    //  Fetch provinces on initial load
 
+    async function fetchDistricts() {
+        try {
+            const result = await getDistricts();
+            setDistrict(result.data.district);
+        } catch (error) {
+            console.error('Error fetching districts:', error);
+
+        }
+    }
+    async function fetchProvinces() {
+        try {
+            const result = await getProvinces();
+            console.log(result)
+            setProvince(result.data.province);
+        } catch (error) {
+            console.error('Error fetching provinces:', error);
+        }
+    }
 
     useEffect(() => {
-        async function fetchProvinces() {
-            try {
-                const result = await getProvinces();
-                setProvinces(result);
-            } catch (error) {
-                console.error('Error fetching provinces:', error);
-                // Handle errors gracefully, e.g., display an error message
-            }
-        }
+        fetchDistricts();
         fetchProvinces();
     }, []);
-
-    // Fetch districts based on selected province
-    useEffect(() => {
-        async function fetchDistricts() {
-            if (province) {
-                try {
-                    const result = await getDistrictsByProvince(province);
-                    setDistricts(result);
-                } catch (error) {
-                    console.error('Error fetching districts:', error);
-                    // Handle errors gracefully
-                }
-            } else {
-                setDistricts([]); // Clear districts if province is not selected
-            }
-        }
-        fetchDistricts();
-    }, [province]);
-
-
 
     const handleSearch = async () => {
         try {
             let results;
             const searchParams = new URLSearchParams();
-            if (searchType === 'clinic') {
+            if (type === 'clinic') {
                 // Search clinics by clinic name
                 if (clinicName) {
                     searchParams.append('clinicName', clinicName);
                 }
-            } else if (searchType === 'province') {
+            } else if (type === 'province') {
                 // Search clinics by province
                 if (province) {
                     searchParams.append('province', province);
                 }
-            } else if (searchType === 'district') {
+            } else if (type === 'district') {
                 // Search clinics by district
                 if (district) {
                     searchParams.append('district', district);
                 }
             }
-            // Call searchClinics API with the appropriate search parameters
-            results = await searchClinics(searchParams);
 
-            // Navigate to search results page with matched clinics (implement navigation logic)
-            // ทำการนำผลลัพธ์ไปแสดงผลในหน้า search results โดยใช้ข้อมูล results
+            results = await searchClinics(searchParams);
 
         } catch (error) {
             console.error('Error searching clinics:', error);
-            // Handle errors gracefully
+
         }
     };
 
     const handleClickLogin = () => {
-        navigate('auth/login');
+        navigate('/auth/login');
     }
 
 
@@ -111,8 +94,8 @@ export default function Search() {
                 </div>
                 <select
                     className="select select-primary select-bordered join-item"
-                    value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
                 >
                     <option value="">เลือกประเภทของตาราง</option>
                     <option value="clinic">คลินิก</option>

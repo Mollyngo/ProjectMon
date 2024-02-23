@@ -15,6 +15,9 @@ export const AuthContext = createContext();
 export default function AuthContextProvider({ children }) {
     const [authUser, setAuthUser] = useState(null);
     const [initialLoading, setInitialLoading] = useState(true);
+
+
+    console.log(authUser)
     // ใน useEffect
     useEffect(() => {
         const token = getToken();
@@ -49,10 +52,11 @@ export default function AuthContextProvider({ children }) {
     const login = async (credential) => {
         try {
             const response = await auth.login(credential);
+            console.log(response)
+
             setAuthUser(response.data.user);
-            storeToken(response.data.token);
-            return response.data.user;
-            console.log(response.data.user);
+            storeToken(response.data.accessToken);
+
         } catch (error) {
             console.log(error);
         }

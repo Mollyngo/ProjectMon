@@ -88,15 +88,10 @@ exports.getClinicByDistrict = async (req, res, next) => {
 }
 
 
-exports.getDistrictFromProvince = async (req, res, next) => {
+exports.getDistrict = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const district = await prisma.district.findMany({
-            where: {
-                province_id: parseInt(id),
-            },
-        });
-        res.status(200).json(district);
+        const district = await prisma.district.findMany();
+        res.status(200).json({ district: district.name });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error searching clinics' });
@@ -189,3 +184,27 @@ exports.findClinicByProvince = async (province) => {
         }
     })
 }
+
+exports.findClinicByNameDistrictAndProvince = async (name, district, province) => {
+    return await prisma.clinic.findMany({
+        where: {
+            name: {
+                contains: name
+            },
+            district: {
+                name: {
+                    contains: district
+                }
+            },
+            province: {
+                name: {
+                    contains: province
+                }
+            }
+        }
+    })
+}
+
+exports.findDistrict = (name) => prisma.district.findMany()
+
+exports.findProvince = (name) => prisma.province.findMany()

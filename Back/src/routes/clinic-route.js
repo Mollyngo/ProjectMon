@@ -8,17 +8,13 @@ router.post('/add', clinicController.addClinic);
 router.get('/search', clinicController.searchClinic);
 router.patch('/:id', clinicController.updatedClinic);
 router.delete('/:id', clinicController.deletedClinic);
-router.get('/district', (req, res) => {
-    res.send(SearchController.getAllDistrict());
-});
+router.get('/district', SearchController.getAllDistrict);
 
-router.get('/province', (req, res) => {
-    res.send(SearchController.getAllProvince());
-});
+router.get('/province', SearchController.getAllProvince);
 
-router.get('/', (req, res) => {
-    res.send(SearchController.getAllClinic());
-});
+
+router.get('/', SearchController.getAllClinic);
+
 
 
 

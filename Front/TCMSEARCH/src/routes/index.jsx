@@ -20,9 +20,9 @@ import SearchResult from "../pages/SearchResult";
 const routerGuest = createBrowserRouter([
     {
         path: '/',
-        element: <Login />, // Render Search component directly
-        errorElement: <Navigate to="/" />,
+
         children: [
+            { path: '', element: <Search /> },
             { path: 'auth/login', element: <Login /> },
             { path: 'auth/register', element: <Register /> },
         ]
@@ -32,9 +32,9 @@ const routerGuest = createBrowserRouter([
 const routerUser = createBrowserRouter([
     {
         path: '/',
-        element: <UserMenu />, // Render UserMenu component directly
-        errorElement: <Navigate to="/auth/login" />,
+
         children: [
+            { path: '', element: <UserMenu /> },
             { path: 'clinic', element: <UserClinicPage /> },
             { path: 'search', element: <UserSearchResult /> },
             { path: 'edit', element: <EditClinic /> },
@@ -47,7 +47,7 @@ const routerUser = createBrowserRouter([
 const routerAdmin = createBrowserRouter([
     {
         path: '/',
-        element: <AdminMenu />, // Render AdminMenu component directly
+        element: <AdminMenu />,
         errorElement: <Navigate to="/auth/login" />,
         children: [
             { path: 'approve', element: <AdminApprove /> },
@@ -61,12 +61,12 @@ const routerAdmin = createBrowserRouter([
 ]);
 
 export default function Routes() {
-    const { user } = useAuth();
-    const finalRouter = !user?.role ? routerGuest : user?.role === 'ADMIN' ? routerAdmin : routerUser;
+    const { authUser } = useAuth();
+    console.log(authUser?.role)
+    const finalRouter = !authUser?.role ? routerGuest : authUser?.role === 'ADMIN' ? routerAdmin : routerUser;
     return (
         <div>
             <RouterProvider router={finalRouter} />;
-            {/* Removed unnecessary conditional rendering of AdminMenu/UserMenu */}
         </div>
     );
 }

@@ -32,6 +32,7 @@ exports.login = catchError(async (req, res, next) => {
         createError('invalid credentials', 400);
     }
     console.log(existsUser)
+
     const isMatch = await bcrypt.compare(
         req.body.password,
         existsUser.password
@@ -40,6 +41,7 @@ exports.login = catchError(async (req, res, next) => {
         createError('invalid credentials', 400);
     }
     console.log(isMatch)
+
     const payload = {
         userId: existsUser.id,
         role: existsUser.role
@@ -48,6 +50,7 @@ exports.login = catchError(async (req, res, next) => {
     const accessToken = jwtService.sign(payload);
     delete existsUser.password;
 
+
     res.status(200).json({ accessToken, user: existsUser });
 })
 
@@ -55,5 +58,5 @@ exports.logout = catchError(async (req, res, next) => {
     res.status(200).json({ message: 'Logged out successfully' });
 })
 exports.getUser = catchError(async (req, res, next) => {
-    res.status(200).json({ user: req.user, role: req.user.role });
+    res.status(200).json({ user: req.user });
 })

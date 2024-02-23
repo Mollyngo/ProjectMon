@@ -5,7 +5,7 @@ exports.search = async (req, res, next) => {
         const result = await searchService.search(req.query);
         res.status(200).json(result);
     } catch (error) {
-        console.error(error);
+        next(error)
         res.status(500).json({ error: 'Error searching clinics' });
     }
 }
@@ -16,26 +16,38 @@ exports.searchResult = async (req, res, next) => {
         const result = await searchService.searchResult(query);
         res.status(200).json(result);
     } catch (error) {
-        console.error(error);
+        next(error)
     }
 }
 
 exports.getAllProvince = async (req, res, next) => {
     try {
-        const province = await searchService.getAllProvince();
-        res.status(200).json(province);
+        const province = await searchService.findProvince();
+        console.log(province)
+        res.status(200).json({ province });
     } catch (error) {
-        console.error(error);
+        next(error)
+
     }
 }
 
+exports.getAllDistrict = async (req, res, next) => {
+    try {
+        const district = await searchService.findDistrict();
+        console.log(district)
+        res.status(200).json({ district });
+    } catch (error) {
+        next(error)
+        console.log(error)
+    }
+}
 
 exports.getProvince = async (req, res, next) => {
     try {
         const province = await searchService.getProvince();
         res.status(200).json({ province: province.name });
     } catch (error) {
-        console.error(error);
+        next(error)
     }
 }
 
@@ -46,24 +58,15 @@ exports.getDistrictFromProvince = async (req, res, next) => {
         const district = await searchService.getDistrictFromProvince(id);
         res.status(200).json(district);
     } catch (error) {
-        console.error(error);
+        next(error)
     }
 }
 
-
-exports.getAllDistrict = async (req, res, next) => {
-    try {
-        const district = await searchService.getAllDistrict();
-        res.status(200).json(district);
-    } catch (error) {
-        console.error(error);
-    }
-}
 
 exports.getClinicByDistrict = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const clinic = await searchService.getClinicByDistrict(id);
+        const clinic = await searchService.findProvince(id);
         res.status(200).json(clinic);
     } catch (error) {
         console.error(error);

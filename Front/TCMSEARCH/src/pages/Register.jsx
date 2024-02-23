@@ -28,7 +28,7 @@ export default function Register({ onSuccess }) {
             const validateError = validateRegister(input);
             if (validateError) {
                 return setError(validateError);
-                
+
             }
 
             await register(input);
@@ -91,6 +91,20 @@ export default function Register({ onSuccess }) {
                                 type="email"
                                 name="email"
                                 value={input.email}
+                                onChange={handleChangeInput}
+                                errorMessage={error?.email}
+                            />
+                        </div>
+                    </div>
+                    <div className="sm:col-span-2">
+                        <label htmlFor="password" className="block text-sm font-semibold leading-6 text-gray-900">
+                            Password
+                        </label>
+                        <div className="mt-2.5">
+                            <Input
+                                type="password"
+                                name="password"
+                                value={input.password}
                                 onChange={handleChangeInput}
                                 errorMessage={error?.email}
                             />

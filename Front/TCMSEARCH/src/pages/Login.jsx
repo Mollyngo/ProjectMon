@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 
 export default function Login() {
-    const { login } = useAuth();
+    const { login, authUser } = useAuth();
     const [input, setInput] = useState({
         email: "",
         password: "",
@@ -19,20 +19,13 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { email, password } = input;
             validateLogin(input);
-            const response = await login(email, password);
-            if (response) {
-                toast.success("เข้าสู่ระบบสำเร็จ");
-                if (response.user.role === "ADMIN") {
-                    navigate("/admin-menu");
-                } else {
-                    navigate("/user-menu");
-                    if (response.user.role === "USER") {
-                        navigate("/user-menu");
-                    }
-                }
+            await login(input);
+            if (authUser) {
+                navigate('/')
             }
+
+
         } catch (error) {
             toast.error("เข้าสู่ระบบไม่สำเร็จ");
             console.log(error);
