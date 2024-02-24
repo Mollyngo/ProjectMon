@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const validate = require('./validate');
 
 const targetUserIdSchema = Joi.object({
     targetUserId: Joi.number().positive().required()

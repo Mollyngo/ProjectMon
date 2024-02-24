@@ -13,27 +13,42 @@ function AddClinic() {
         others: '',
         photo: '',
     });
-    const [districtId, setDistrictId] = useState('');
-    const [districts, setDistricts] = useState([]);
+    const [district_id, setDistrict_id] = useState('');
+    const [district, setDistrict] = useState([]);
+    // const [province, setProvince] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        async function fetchDistricts() {
-            try {
-                const result = await getDistricts();
-                setDistricts(result);
-            } catch (error) {
-                console.error('Error fetching districts:', error);
-                setErrorMessage('เกิดข้อผิดพลาดในการดึงข้อมูลอำเภอ'); // Handle errors gracefully
-            }
+    async function fetchDistricts() {
+        try {
+            const result = await getDistricts();
+            setDistrict(result.data.district);
+            console.log(result.data.district)
+        } catch (error) {
+            console.error('Error fetching districts:', error);
+
         }
+    }
+    // async function fetchProvinces() {
+    //     try {
+    //         const result = await getProvinces();
+    //         console.log(result)
+    //         setProvince(result.data.province);
+    //     } catch (error) {
+    //         console.error('Error fetching provinces:', error);
+    //     }
+    // }
+    useEffect(() => {
         fetchDistricts();
+        // fetchProvinces();
     }, []);
 
-    const handleAddClinic = async () => {
+
+    const handleAddClinic = async (e) => {
         try {
-            const response = await createClinic(name, info, districtId);
+            e.preventDefault();
+
+            const response = await createClinic({ name, mobile: info.mobile, working_hour: info.working_hour, website: info.website, service: info.service, others: info.others, photo: info.photo, district_id });
             if (response.success) {
                 // Redirect to clinic list page
                 navigate('/clinics');
@@ -69,17 +84,34 @@ function AddClinic() {
                 <input className="input input-bordered h-10" type="text" id="others" name="others" value={info.others} onChange={(e) => setInfo({ ...info, others: e.target.value })} />
                 <br />
                 <label name="district">อำเภอ:</label>
-                <select className="select select-bordered" id="district" name="district" value={districtId} onChange={(e) => setDistrictId(e.target.value)}>
+                <select className="select select-bordered"
+                    id="district"
+                    name="district"
+                    value={district_id}
+                    onChange={(e) => setDistrict_id(e.target.value)}>
                     <option value="">เลือกอำเภอ</option>
-                    {districts.map((district) => (
+                    {district.map((district) => (
                         <option key={district.id} value={district.id}>
                             {district.name}
                         </option>
                     ))}
                 </select>
-                <br />
+                {/* <select
+                    className="select select-bordered"
+                    id='province'
+                    name='province'
+                    value={province}
+                    onChange={(e) => setProvince(e.target.value)} >
+                    <option value="">เลือกจังหวัด</option>
+                    {province && province.map(province => (
+                        <option key={province.id} value={province.id}>
+                            {province.name}
+                        </option>
+                    ))}
+                </select>
+                <br /> */}
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
-                <button className="btn btn-primary" type="submit">เพิ่มคลินิก</button>
+                <button className="btn btn-primary" >เพิ่มคลินิก</button>
             </form>
 
         </div>

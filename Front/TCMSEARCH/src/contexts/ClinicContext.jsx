@@ -18,6 +18,7 @@ export default function ClinicContextProvider({ children }) {
                 console.log(error);
             })
     }, []);
+
     const createClinic = async (FormData) => {
         await clinic.createClinic(FormData);
     };

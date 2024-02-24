@@ -3,9 +3,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import head from '../assets/head.png';
 import { getProvinces, searchClinics, getDistricts } from '../api/clinic'; // Assuming you have an API client
+import useAuth from '../hooks/use-auth';
 
 
 export default function Search() {
+    const { authUser } = useAuth()
+    console.log(authUser)
     const [province, setProvince] = useState('');
     const [district, setDistrict] = useState('');
     const [type, setType] = useState('');
@@ -25,7 +28,7 @@ export default function Search() {
     async function fetchProvinces() {
         try {
             const result = await getProvinces();
-            console.log(result)
+
             setProvince(result.data.province);
         } catch (error) {
             console.error('Error fetching provinces:', error);
@@ -151,8 +154,8 @@ export default function Search() {
             </button>
             <br />
 
-            <button className="btn-secondary btn" onClick={handleClickLogin}>
-                เข้าสู่ระบบ / ลงทะเบียน</button>
+            {!authUser && <button className="btn-secondary btn" onClick={handleClickLogin}>
+                เข้าสู่ระบบ / ลงทะเบียน</button>}
         </div>
     );
 }

@@ -14,13 +14,13 @@ import AddClinic from "../pages/AddClinic";
 import EditClinic from "../pages/EditClinic";
 import ClinicPage from "../pages/ClinicPage";
 import SearchResult from "../pages/SearchResult";
+import ClinicList from "../pages/ClinicList";
 
 
 
 const routerGuest = createBrowserRouter([
     {
         path: '/',
-
         children: [
             { path: '', element: <Search /> },
             { path: 'auth/login', element: <Login /> },
@@ -32,14 +32,14 @@ const routerGuest = createBrowserRouter([
 const routerUser = createBrowserRouter([
     {
         path: '/',
-
         children: [
             { path: '', element: <UserMenu /> },
-            { path: 'clinic', element: <UserClinicPage /> },
+            { path: 'clinic', element: <ClinicList /> },
             { path: 'search', element: <UserSearchResult /> },
-            { path: 'edit', element: <EditClinic /> },
-            { path: 'add', element: <AddClinic /> },
+            { path: 'clinic/edit', element: <EditClinic /> },
+            { path: 'clinic/add', element: <AddClinic /> },
             { path: 'searchResult', element: <UserSearchResult /> },
+
         ]
     }
 ]);
@@ -62,8 +62,9 @@ const routerAdmin = createBrowserRouter([
 
 export default function Routes() {
     const { authUser } = useAuth();
-    console.log(authUser?.role)
+    console.log(authUser)
     const finalRouter = !authUser?.role ? routerGuest : authUser?.role === 'ADMIN' ? routerAdmin : routerUser;
+    // const finalRouter = routerUser;
     return (
         <div>
             <RouterProvider router={finalRouter} />;

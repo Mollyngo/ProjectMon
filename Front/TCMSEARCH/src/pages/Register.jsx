@@ -8,10 +8,9 @@ import Button from '../components/Button';
 const initial = {
     email: '',
     password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
+    first_name: '',
+    last_ame: '',
+    mobile: '',
 
 }
 
@@ -25,16 +24,13 @@ export default function Register({ onSuccess }) {
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
-            const validateError = validateRegister(input);
-            if (validateError) {
-                return setError(validateError);
-
+            validateRegister(input);
+            const result = await register(input);
+            if (result.success) {
+                onSuccess();
+            } else {
+                setError(result.message);
             }
-
-            await register(input);
-            setError(null);
-            onSuccess();
-
         } catch (error) {
             return error.response.data;
         }
@@ -61,7 +57,7 @@ export default function Register({ onSuccess }) {
                             <Input
                                 type="text"
                                 name="firstName"
-                                value={input.firstName}
+                                value={input.first_name}
                                 onChange={handleChangeInput}
                                 errorMessage={error?.firstName}
                             />
@@ -75,7 +71,7 @@ export default function Register({ onSuccess }) {
                             <Input
                                 type="text"
                                 name="lastName"
-                                value={input.lastName}
+                                value={input.last_name}
                                 onChange={handleChangeInput}
                                 errorMessage={error?.lastName}
                             />
@@ -119,25 +115,21 @@ export default function Register({ onSuccess }) {
                             <Input
                                 type="text"
                                 name="phoneNumber"
-                                value={input.phoneNumber}
+                                value={input.mobile}
                                 onChange={handleChangeInput}
-                                errorMessage={error?.phoneNumber}
+                                errorMessage={error?.mobile}
                             />
                         </div>
                     </div>
-
-
                 </div>
                 <div className="mt-10 items-center">
                     <Button type="submit" className="w-full" >
                         สมัครสมาชิก
                     </Button>
-
-
                 </div>
             </form >
             <Button type="submit" className="w-full" >
-                <Link to="/login">
+                <Link to="/auth/login">
                     ย้อนกลับ
                 </Link>
             </Button>

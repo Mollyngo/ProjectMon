@@ -23,7 +23,7 @@ exports.searchResult = async (req, res, next) => {
 exports.getAllProvince = async (req, res, next) => {
     try {
         const province = await searchService.findProvince();
-        console.log(province)
+        // console.log(province)
         res.status(200).json({ province });
     } catch (error) {
         next(error)
@@ -34,7 +34,7 @@ exports.getAllProvince = async (req, res, next) => {
 exports.getAllDistrict = async (req, res, next) => {
     try {
         const district = await searchService.findDistrict();
-        console.log(district)
+        // console.log(district)
         res.status(200).json({ district });
     } catch (error) {
         next(error)

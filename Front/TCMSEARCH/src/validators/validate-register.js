@@ -9,9 +9,8 @@ const registerSchema = joi.object({
         .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
         .message("กรุณากรอกรหัสผ่าน"),
 
-    firstName: joi.string().required().trim().message("กรุณากรอกชื่อ"),
-    lastName: joi.string().required().trim().message("กรุณากรอกนามสกุล"),
-
+    first_name: joi.string().required().trim().message("กรุณากรอกชื่อ"),
+    last_name: joi.string().required().trim().message("กรุณากรอกนามสกุล"),
 });
 
 const validateRegister = input => validate(registerSchema, input)

@@ -6,10 +6,10 @@ const catchError = require('../utills/catch-error');
 const jwtService = require('../services/jwt-service');
 
 exports.register = catchError(async (req, res, next) => {
-    const existsUser = await userService.findUserByEmail(req.body.email);
-    if (existsUser) {
-        createError(400, 'มี email นี้ในระบบแล้ว');
-    }
+    // const existsUser = await userService.findUserByEmail(req.body.email);
+    // if (existsUser) {
+    //     createError(400, 'มี email นี้ในระบบแล้ว');
+    // }
     const { first_name, last_name, email, password, mobile, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     req.body.password = hashedPassword;
@@ -43,7 +43,7 @@ exports.login = catchError(async (req, res, next) => {
     console.log(isMatch)
 
     const payload = {
-        userId: existsUser.id,
+        user_id: existsUser.id,
         role: existsUser.role
     };
     console.log(payload)
@@ -58,5 +58,6 @@ exports.logout = catchError(async (req, res, next) => {
     res.status(200).json({ message: 'Logged out successfully' });
 })
 exports.getUser = catchError(async (req, res, next) => {
+    console.log("sssssssssssssssssssssssssssssss")
     res.status(200).json({ user: req.user });
 })

@@ -6,21 +6,7 @@ const catchError = require('../utills/catch-error');
 
 const jwt = require('jsonwebtoken');
 
-exports.getAllClinic = async (req, res, next) => {
-    try {
-        const result = await prisma.clinic.findMany({
-            where: {
-                deletedAt: null
-            }
-        })
 
-    } catch (error) {
-        console.error(error)
-        next(error)
-
-    }
-
-}
 
 exports.searchClinicFromNameDistrictAndProvince = async (req, res, next) => {
     try {
@@ -208,3 +194,7 @@ exports.findClinicByNameDistrictAndProvince = async (name, district, province) =
 exports.findDistrict = (name) => prisma.district.findMany()
 
 exports.findProvince = (name) => prisma.province.findMany()
+
+exports.getAllClinic = () => {
+    return prisma.clinic.findMany();
+}

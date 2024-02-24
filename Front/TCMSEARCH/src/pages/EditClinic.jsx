@@ -4,7 +4,7 @@ import { getClinicById, editClinic } from '../api/clinic'; // Assuming you have 
 import { getDistricts } from '../api/clinic'; // Assuming you have an API client
 
 function EditClinic() {
-    const { clinicId } = useParams();
+    const { clinic_id } = useParams();
     const navigate = useNavigate();
 
     const [clinic, setClinic] = useState(null);
@@ -16,17 +16,17 @@ function EditClinic() {
         others: '',
         photo: '',
     });
-    const [districtId, setDistrictId] = useState('');
+    const [district_id, setDistrict_id] = useState('');
     const [districts, setDistricts] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         async function fetchClinic() {
             try {
-                const result = await getClinicById(clinicId);
+                const result = await getClinicById(clinic_id);
                 setClinic(result);
                 setInfo(result.info);
-                setDistrictId(result.district_id);
+                setDistrict_id(result.district_id);
             } catch (error) {
                 console.error('Error fetching clinic:', error);
                 setErrorMessage('เกิดข้อผิดพลาดในการดึงข้อมูลคลินิก'); // Handle errors gracefully
@@ -47,7 +47,7 @@ function EditClinic() {
 
     const handleEditClinic = async () => {
         try {
-            const response = await editClinic(clinicId, name, info, districtId);
+            const response = await editClinic(clinic.id, clinic.name, info, district_id);
             if (response.success) {
                 // Redirect to clinic list page
                 navigate('/clinics');
@@ -129,8 +129,8 @@ function EditClinic() {
                         className="input input-bordered h-10"
                         id="district"
                         name="district"
-                        value={districtId}
-                        onChange={(e) => setDistrictId(e.target.value)}
+                        value={district_id}
+                        onChange={(e) => setDistrict_id(e.target.value)}
                     >
                         <option value="">เลือกอำเภอ</option>
                         {districts.map((district) => (

@@ -49,7 +49,10 @@ exports.findUserById = async (id) => {
 
 exports.createUser = async (user) => {
     return await prisma.user.create({
-        data: user
+        data: {
+            ...user,
+            role: 'USER',
+        }
     })
 }
 
@@ -66,7 +69,5 @@ exports.updateUserById = (data, id) =>
     prisma.user.update({ data, where: { id } });
 
 exports.getAllUsers = async () => {
-    return await prisma.user.findMany({
-
-    })
+    return await prisma.user.findUnique()
 }

@@ -6,10 +6,6 @@ import * as clinic from '../api/clinic';
 import { getToken, removeToken, storeToken } from '../validators/localStorage';
 
 
-
-
-
-
 export const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
@@ -20,12 +16,15 @@ export default function AuthContextProvider({ children }) {
     console.log(authUser)
     // ใน useEffect
     useEffect(() => {
-        const token = getToken();
-        if (token) {
+        // const token = getToken();
+        // console.log(token)
+        if (getToken()) {
             auth
                 .fetchUser()
                 .then((response) => {
-                    setAuthUser(response.data.authUser);
+                    console.log(response.data.user)
+                    setAuthUser(response.data.user);
+                    console.log(authUser)
                 })
                 .catch((error) => {
                     console.log(error);
@@ -43,7 +42,7 @@ export default function AuthContextProvider({ children }) {
         try {
             const response = await auth.register(user);
             setAuthUser(response.data.newUser);
-            storeToken(response.data.token);
+            storeToken(response.data.accessToken);
         } catch (error) {
             console.log(error);
         }

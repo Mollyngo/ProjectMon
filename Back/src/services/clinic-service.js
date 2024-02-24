@@ -110,7 +110,7 @@ exports.deleteClinic = async (id) => {
     try {
         return await prisma.clinic.delete({
             where: {
-                id,
+                id: +id,
             },
         });
     } catch (error) {
@@ -126,4 +126,8 @@ exports.getApprovedVisibleClinics = async () => {
             visibility: 'VISIBLE'
         }
     });
+}
+
+exports.getAllClinics = async () => {
+    return await prisma.clinic.findMany();
 }

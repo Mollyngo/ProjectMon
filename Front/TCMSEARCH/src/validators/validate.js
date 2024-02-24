@@ -6,6 +6,7 @@ const validate = schema => input => {
             acc[el.path[0]] = el.message
             return acc
         }, {})
+        console.log(result)
         return result
     }
 }
