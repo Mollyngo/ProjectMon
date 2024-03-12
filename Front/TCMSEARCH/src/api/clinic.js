@@ -20,10 +20,11 @@ export const getApprovedVisibleClinics = async (province, district, searchType) 
     }
 }
 export const getProvinces = () => axios.get('/clinic/province');
-
+// console.log(getProvinces())
 export const getDistrictsByProvince = province => axios.get(`/clinic/district?province=${province}`);
 
 export const getDistricts = () => axios.get('/clinic/district');
+
 
 export const getClinicFromDistrict = district => axios.get(`/clinic/search?district=${district}`);
 
@@ -51,7 +52,9 @@ export const getClinicByProvince = async (province) => {
 }
 export const getClinicById = id => axios.get(`/clinic/${id}`);
 
-export const getClinics = () => {
+
+
+export const getAllClinic = () => {
     return axios.get('/clinic');
 }
 

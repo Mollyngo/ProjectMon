@@ -15,59 +15,73 @@ import EditClinic from "../pages/EditClinic";
 import ClinicPage from "../pages/ClinicPage";
 import SearchResult from "../pages/SearchResult";
 import ClinicList from "../pages/ClinicList";
+import HomePage from "../pages/HomePage";
 
-
-
-const routerGuest = createBrowserRouter([
+const router = createBrowserRouter([
     {
-        path: '/',
-        children: [
-            { path: '', element: <Search /> },
-            { path: 'auth/login', element: <Login /> },
-            { path: 'auth/register', element: <Register /> },
-        ]
-    }
-]);
-
-const routerUser = createBrowserRouter([
+        path: "/",
+        element: <HomePage />,
+    },
     {
-        path: '/',
-        children: [
-            { path: '', element: <UserMenu /> },
-            { path: 'clinic', element: <ClinicList /> },
-            { path: 'search', element: <UserSearchResult /> },
-            { path: 'clinic/edit', element: <EditClinic /> },
-            { path: 'clinic/add', element: <AddClinic /> },
-            { path: 'searchResult', element: <UserSearchResult /> },
-
-        ]
-    }
-]);
-
-const routerAdmin = createBrowserRouter([
+        path: "/login",
+        element: <Login />,
+    },
     {
-        path: '/',
+        path: "/register",
+        element: <Register />,
+    },
+    {
+        path: "/search",
+        element: <Search />,
+    },
+    {
+        path: "/user-menu",
+        element: <UserMenu />,
+
+    },
+    {
+        path: "/user-search-result",
+        element: <UserSearchResult />,
+    },
+    {
+        path: "/user-clinic-page",
+        element: <UserClinicPage />,
+    },
+    {
+        path: "/admin-menu",
         element: <AdminMenu />,
-        errorElement: <Navigate to="/auth/login" />,
-        children: [
-            { path: 'approve', element: <AdminApprove /> },
-            { path: 'add', element: <AddClinic /> },
-            { path: 'edit', element: <EditClinic /> },
-            { path: 'searchResult', element: <UserSearchResult /> },
-            { path: 'clinic', element: <UserClinicPage /> },
-            { path: 'search', element: <UserSearchResult /> },
-        ]
+    },
+    {
+        path: "/admin-approve",
+        element: <AdminApprove />,
+    },
+    {
+        path: "/add-clinic",
+        element: <AddClinic />,
+    },
+    {
+        path: "/edit-clinic",
+        element: <EditClinic />,
+    },
+    {
+        path: "/clinic-page",
+        element: <ClinicPage />,
+    },
+    {
+        path: "/search-result",
+        element: <SearchResult />,
+    },
+    {
+        path: "/clinic-list",
+        element: <ClinicList />,
+    },
+    {
+        path: "*",
+        element: <Navigate to="/" />,
     }
+
 ]);
 
 export default function Routes() {
-    const { authUser } = useAuth();
-    console.log(authUser)
-    const finalRouter = !authUser?.role ? routerGuest : authUser?.role === 'ADMIN' ? routerAdmin : routerUser;
-    // const finalRouter = routerUser;
-    return (
-        <div>
-            <RouterProvider router={finalRouter} />;
-        </div>
-    );
+    return <RouterProvider router={router} />;
 }

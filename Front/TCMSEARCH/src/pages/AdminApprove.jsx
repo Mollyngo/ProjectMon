@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 import { getProvinces, getDistrictsByProvince } from '../api/clinic';
 import { useState, useEffect } from 'react';
-import { getClinicById } from '../api/clinic';
+// import { getClinicById } from '../api/clinic';
+
 import Button from '../components/Button';
 
 export default function AdminApprove() {

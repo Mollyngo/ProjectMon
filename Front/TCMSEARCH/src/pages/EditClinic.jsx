@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getClinicById, editClinic } from '../api/clinic'; // Assuming you have an API client
+// import { getClinicById, editClinic } from '../api/clinic'; // Assuming you have an API client
 import { getDistricts } from '../api/clinic'; // Assuming you have an API client
 
 function EditClinic() {

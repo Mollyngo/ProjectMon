@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getClinics } from "../api/clinic";
+import { getAllClinic } from "../api/clinic";
 import useAuth from "../hooks/use-auth";
 
 
@@ -9,7 +9,7 @@ function ClinicList() {
     const [clinic, setClinic] = useState([]);
 
     useEffect(() => {
-        getClinics().then((data) => {
+        getAllClinic().then((data) => {
             setClinic(data);
         });
     }, []);
