@@ -15,7 +15,6 @@ function AddClinic() {
     });
     const [district_id, setDistrict_id] = useState('');
     const [district, setDistrict] = useState([]);
-    // const [province, setProvince] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 

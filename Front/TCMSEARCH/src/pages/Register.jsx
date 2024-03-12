@@ -11,9 +11,7 @@ const initial = {
     first_name: '',
     last_ame: '',
     mobile: '',
-
 }
-
 
 export default function Register({ onSuccess }) {
 
@@ -41,13 +39,12 @@ export default function Register({ onSuccess }) {
     }
 
     return (
-        <div className="  bg-white px-6 py-5  ">
+        <div className=" px-6 py-5  ">
 
             <div className="mx-auto max-w-2xl text-center">
                 <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">สมัครสมาชิก</h2>
-
             </div>
-            <form onSubmit={handleSubmit} className="mx-auto mt-16 max-w-xl sm:mt-20">
+            <form onSubmit={handleSubmit} className="mx-auto my-16 max-w-xl sm:mt-20">
                 <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
                     <div>
                         <label htmlFor="first-name" className="block text-sm font-semibold leading-6 text-gray-900">
@@ -122,14 +119,13 @@ export default function Register({ onSuccess }) {
                         </div>
                     </div>
                 </div>
-                <div className="mt-10 items-center">
-                    <Button type="submit" className="w-full" >
-                        สมัครสมาชิก
-                    </Button>
-                </div>
+                <br />
+                <button className="w-full bg-purple-300 p-2 round-xl" type="submit"  >
+                    สมัครสมาชิก
+                </button>
             </form >
-            <Button type="submit" className="w-full" >
-                <Link to="/auth/login">
+            <Button type="submit" className="w-full pt-10 mt-12" >
+                <Link to="/login">
                     ย้อนกลับ
                 </Link>
             </Button>

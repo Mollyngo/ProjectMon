@@ -4,8 +4,7 @@ import useAuth from "../hooks/use-auth";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
-import validateLogin from "../validators/validateLogin"; // นำเข้าฟังก์ชันตรวจสอบข้อมูล
-import { Link } from "react-router-dom";
+import validateLogin from "../validators/validateLogin";
 
 
 export default function Login() {
@@ -25,7 +24,6 @@ export default function Login() {
                 navigate('/')
             }
 
-
         } catch (error) {
             toast.error("เข้าสู่ระบบไม่สำเร็จ");
             console.log(error);
@@ -37,7 +35,7 @@ export default function Login() {
     };
 
     const handleRegister = () => {
-        navigate("/auth/register");
+        navigate("/register");
     };
 
     return (

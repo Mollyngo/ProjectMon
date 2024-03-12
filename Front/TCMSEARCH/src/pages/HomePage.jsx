@@ -1,85 +1,91 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import head from '../assets/head.png';
 import { getProvinces, searchClinics, getDistricts, getAllClinic } from '../api/clinic'; // Assuming you have an API client
-import useAuth from '../hooks/use-auth';
 
 
-export default function HomePage() {
-    const { authUser } = useAuth()
-    console.log(authUser)
+export default function Search() {
     const [province, setProvince] = useState('');
-    const [district, setDistrict] = useState('');
+    const [district, setDistrict] = useState(" ");
     const [type, setType] = useState('');
     const [clinicName, setClinicName] = useState('');
     const navigate = useNavigate();
+    const [clinic, setClinic] = useState([]);
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
 
 
-    const fetchDistricts = async (province) => {
+
+    async function fetchAllClinic() {
         try {
-            const districts = await getDistricts(province);
-            setDistrict(districts);
+            const result = await getAllClinic();
+            setClinic(result.data.clinic);
+        } catch (error) {
+            console.error('Error fetching clinics:', error);
+        }
+    }
+    async function fetchProvinces() {
+        try {
+            const result = await getProvinces();
+            setProvinces(result.data.province);
+        } catch (error) {
+            console.error('Error fetching provinces:', error);
+        }
+    }
+    useEffect(() => {
+        fetchProvinces();
+        fetchAllClinic();
+    }, []);
+
+    async function fetchDistricts(province_id) {
+        try {
+            const response = await getDistricts(province_id);
+            const { data } = response;
+
+            const filteredDistricts = data.district.filter(district => district.province_id === province_id);
+
+            setDistricts(filteredDistricts); // Set filtered districts
+
         } catch (error) {
             console.error('Error fetching districts:', error);
+            setDistricts([]); // Set empty array in case of error
         }
     }
 
     useEffect(() => {
         if (province) {
-            fetchDistricts(province); // Fetch districts based on selected province
-        } else {
-            setDistrict([]); // Reset districts if no province is selected
+            fetchDistricts(province * 1);
         }
+
     }, [province]);
-
-
-    const fetchAllClinic = async () => {
-        try {
-            const results = await getAllClinic();
-            console.log(results);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
 
     const handleSearch = async () => {
         try {
             let results;
             const searchParams = new URLSearchParams();
             if (type === 'clinic') {
-                // Search clinics by clinic name
                 if (clinicName) {
                     searchParams.append('clinicName', clinicName);
                 }
             } else if (type === 'province') {
-                // Search clinics by province
                 if (province) {
                     searchParams.append('province', province);
                 }
-                if (province) {
-                    await fetchDistricts(province); // Fetch districts based on selected province
-                }
             } else if (type === 'district') {
-                // Search clinics by district
                 if (district) {
                     searchParams.append('district', district);
                 }
             }
-
             results = await searchClinics(searchParams);
-
+            setClinic(results.data.clinic); // Set clinic results
         } catch (error) {
             console.error('Error searching clinics:', error);
         }
     };
+
     const handleClickLogin = () => {
-        navigate('/auth/login');
+        navigate('/login');
     }
-
-
-
 
     return (
         <div className="container flex flex-col mx-auto p-4">
@@ -87,8 +93,6 @@ export default function HomePage() {
                 <div className="hero-overlay bg-opacity-60"></div>
                 <div className="hero-content text-center text-neutral-content">
                     <div className="max-w-md">
-                        {/* <h1 className="mb-5 text-5xl font-bold">Hello there</h1>
-                        <p className="mb-5">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p> */}
                         <button className="btn btn-primary">Get Started</button>
                     </div>
                 </div>
@@ -111,36 +115,24 @@ export default function HomePage() {
                     <option value="province">จังหวัด</option>
                 </select>
                 <div className="indicator">
-                    {/* <span className="indicator-item badge badge-secondary">new</span> */}
-                    <button className="btn-primary btn join-item">Search</button>
+                    <button className="btn-primary btn join-item" onClick={handleSearch}>Search</button>
                 </div>
             </div>
-            <select
-                className="select select-primary select-bordered join-item"
-                value={province}
-                onChange={(e) => setProvince(e.target.value)}
-            >
-                <option value="">เลือกจังหวัด</option>
-                {province && province.map(province => (
-                    <option key={province.id} value={province.id}>{province.name}</option>
-                ))}
-            </select>
-
-            <select
-                className="select select-primary select-bordered join-item"
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-            >
-                <option value="">เลือกอำเภอ</option>
-                {district && district.map(district => (
-                    district.province_id === parseInt(province) && (
-                        <option key={district.id} value={district.name}>
-                            {district.name}
-                        </option>
-                    )
-                ))}
-            </select>
-
+            <label className="form-control w-full max-w-full">
+                <div className="label">
+                    <span className="label-text">จังหวัด</span>
+                </div>
+                <select
+                    className="select select-primary select-bordered join-item"
+                    value={province}
+                    onChange={(e) => setProvince(e.target.value)}
+                >
+                    <option value="">เลือกจังหวัด</option>
+                    {provinces && provinces.map(province => (
+                        <option key={province.id} value={province.id}>{province.name}</option>
+                    ))}
+                </select>
+            </label>
             <label className="form-control w-full max-w-full">
                 <div className="label">
                     <span className="label-text">อำเภอ</span>
@@ -151,28 +143,18 @@ export default function HomePage() {
                     onChange={(e) => setDistrict(e.target.value)}
                 >
                     <option value="">เลือกอำเภอ</option>
-                    {district && district.map(district => (
-                        district.province_id === parseInt(province) && (
-                            <option key={district.id} value={district.name}>
-                                {district.name}
-                            </option>
-                        )
+                    {districts && districts.map(district => (
+                        <option key={district.id} value={district.id}>{district.name}</option>
                     ))}
                 </select>
             </label>
-
+            {/* {console.log(province)}
+            {console.log(district)} */}
 
             <br />
-            <button
-                className="btn-primary btn"
-                onClick={handleSearch}
-            >
-                ค้นหาคลินิก
-            </button>
+            <button className="btn-primary btn" onClick={handleSearch}>ค้นหาคลินิก</button>
             <br />
-
-            {!authUser && <button className="btn-secondary btn" onClick={handleClickLogin}>
-                เข้าสู่ระบบ / ลงทะเบียน</button>}
+            <button className="btn-secondary btn" onClick={handleClickLogin}>เข้าสู่ระบบ / ลงทะเบียน</button>
         </div>
     );
 }
