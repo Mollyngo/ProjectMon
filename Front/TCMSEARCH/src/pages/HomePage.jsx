@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import head from '../assets/head.png';
-import { getProvinces, searchClinics, getDistricts, getAllClinic } from '../api/clinic'; // Assuming you have an API client
+import { getProvinces, getDistricts, getAllClinic } from '../api/clinic'; // Assuming you have an API client
 
 
 export default function Search() {
@@ -44,11 +44,11 @@ export default function Search() {
 
             const filteredDistricts = data.district.filter(district => district.province_id === province_id);
 
-            setDistricts(filteredDistricts); // Set filtered districts
+            setDistricts(filteredDistricts);
 
         } catch (error) {
             console.error('Error fetching districts:', error);
-            setDistricts([]); // Set empty array in case of error
+            setDistricts([]);
         }
     }
 
@@ -76,7 +76,7 @@ export default function Search() {
                     searchParams.append('district', district);
                 }
             }
-            results = await searchClinics(searchParams);
+            results = await getAllClinic(searchParams);
             setClinic(results.data.clinic); // Set clinic results
         } catch (error) {
             console.error('Error searching clinics:', error);
@@ -84,7 +84,7 @@ export default function Search() {
     };
 
     const handleClickLogin = () => {
-        navigate('/login');
+        navigate('/auth/login');
     }
 
     return (
@@ -110,9 +110,9 @@ export default function Search() {
                     onChange={(e) => setType(e.target.value)}
                 >
                     <option value="">เลือกประเภทของตาราง</option>
-                    <option value="clinic">คลินิก</option>
-                    <option value="district">อำเภอ</option>
-                    <option value="province">จังหวัด</option>
+                    <option value={clinicName}>คลินิก</option>
+                    <option value={district}>อำเภอ</option>
+                    <option value={province}>จังหวัด</option>
                 </select>
                 <div className="indicator">
                     <button className="btn-primary btn join-item" onClick={handleSearch}>Search</button>
@@ -148,8 +148,6 @@ export default function Search() {
                     ))}
                 </select>
             </label>
-            {/* {console.log(province)}
-            {console.log(district)} */}
 
             <br />
             <button className="btn-primary btn" onClick={handleSearch}>ค้นหาคลินิก</button>

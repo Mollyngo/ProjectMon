@@ -21,9 +21,12 @@ export default function Login() {
             validateLogin(input);
             await login(input);
             if (authUser) {
-                navigate('/')
+                if (authUser.role === 'ADMIN') {
+                    navigate('/admin-menu');
+                } else {
+                    navigate('/user-menu');
+                }
             }
-
         } catch (error) {
             toast.error("เข้าสู่ระบบไม่สำเร็จ");
             console.log(error);
@@ -35,7 +38,7 @@ export default function Login() {
     };
 
     const handleRegister = () => {
-        navigate("/register");
+        navigate("/auth/register");
     };
 
     return (

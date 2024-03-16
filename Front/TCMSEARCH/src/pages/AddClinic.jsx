@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createClinic } from '../api/clinic';
-import { getDistricts } from '../api/clinic'; // Assuming you have an API client
+import { getDistricts, getProvinces } from '../api/clinic'
+
 
 function AddClinic() {
     const [name, setName] = useState('');
@@ -13,47 +14,56 @@ function AddClinic() {
         others: '',
         photo: '',
     });
-    const [district_id, setDistrict_id] = useState('');
-    const [district, setDistrict] = useState([]);
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [province, setProvince] = useState('');
+    const [district, setDistrict] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [districtId, setDistrictId] = useState('');
+
     const navigate = useNavigate();
 
-    async function fetchDistricts() {
+    async function fetchProvinces() {
         try {
-            const result = await getDistricts();
-            setDistrict(result.data.district);
-            console.log(result.data.district)
+            const result = await getProvinces();
+            setProvinces(result.data.province);
         } catch (error) {
-            console.error('Error fetching districts:', error);
-
+            console.error('Error fetching provinces:', error);
         }
     }
-    // async function fetchProvinces() {
-    //     try {
-    //         const result = await getProvinces();
-    //         console.log(result)
-    //         setProvince(result.data.province);
-    //     } catch (error) {
-    //         console.error('Error fetching provinces:', error);
-    //     }
-    // }
     useEffect(() => {
-        fetchDistricts();
-        // fetchProvinces();
+        fetchProvinces();
     }, []);
+
+    async function fetchDistricts(province_id) {
+        try {
+            const response = await getDistricts(province_id);
+            const { data } = response;
+            const filteredDistricts = data.district.filter(district => district.province_id === province_id);
+            setDistricts(filteredDistricts); // Set filtered districts
+        } catch (error) {
+            console.error('Error fetching districts:', error);
+            setDistricts([]); // Set empty array in case of error
+        }
+    }
+    useEffect(() => {
+        if (province) {
+            fetchDistricts(province * 1);
+        }
+    }, [province]);
 
 
     const handleAddClinic = async (e) => {
         try {
             e.preventDefault();
 
-            const response = await createClinic({ name, mobile: info.mobile, working_hour: info.working_hour, website: info.website, service: info.service, others: info.others, photo: info.photo, district_id });
+            const response = await createClinic({ name, mobile: info.mobile, working_hour: info.working_hour, website: info.website, service: info.service, others: info.others, photo: info.photo, district_id: districtId });
             if (response.success) {
-                // Redirect to clinic list page
-                navigate('/clinics');
+                navigate('/');
             } else {
                 setErrorMessage(response.message);
             }
+
         } catch (error) {
             console.error('Error adding clinic:', error);
             setErrorMessage('เกิดข้อผิดพลาดในการเพิ่มคลินิก'); // Handle errors gracefully
@@ -82,39 +92,45 @@ function AddClinic() {
                 <label name="others">อื่นๆ:</label>
                 <input className="input input-bordered h-10" type="text" id="others" name="others" value={info.others} onChange={(e) => setInfo({ ...info, others: e.target.value })} />
                 <br />
-                <label name="district">อำเภอ:</label>
-                <select className="select select-bordered"
-                    id="district"
-                    name="district"
-                    value={district_id}
-                    onChange={(e) => setDistrict_id(e.target.value)}>
-                    <option value="">เลือกอำเภอ</option>
-                    {district.map((district) => (
-                        <option key={district.id} value={district.id}>
-                            {district.name}
-                        </option>
-                    ))}
-                </select>
-                {/* <select
-                    className="select select-bordered"
-                    id='province'
-                    name='province'
-                    value={province}
-                    onChange={(e) => setProvince(e.target.value)} >
-                    <option value="">เลือกจังหวัด</option>
-                    {province && province.map(province => (
-                        <option key={province.id} value={province.id}>
-                            {province.name}
-                        </option>
-                    ))}
-                </select>
-                <br /> */}
+                <label className="form-control w-full max-w-full">
+                    <div className="label">
+                        <span className="label-text">จังหวัด</span>
+                    </div>
+                    <select
+                        className="select select-primary select-bordered join-item"
+                        value={province}
+                        onChange={(e) => setProvince(e.target.value)}
+                    >
+                        <option value="">เลือกจังหวัด</option>
+                        {provinces && provinces.map(province => (
+                            <option key={province.id} value={province.id}>{province.name}</option>
+                        ))}
+                    </select>
+                </label>
+                <label className="form-control w-full max-w-full">
+                    <div className="label">
+                        <span className="label-text">อำเภอ</span>
+                    </div>
+                    <select
+                        className="select select-primary select-bordered join-item"
+                        value={districtId}
+                        onChange={(e) => {
+                            setDistrictId(e.target.value);
+                            setDistrict(e.target.value); // สั่งให้ state district แสดงค่าเป็น ID ของอำเภอ
+                        }}
+                    >
+                        <option value="">เลือกอำเภอ</option>
+                        {districts && districts.map(district => (
+                            <option key={district.id} value={district.id}>{district.name}</option>
+                        ))}
+                    </select>
+                </label>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
-                <button className="btn btn-primary" >เพิ่มคลินิก</button>
+                <button className="btn btn-primary mt-10" >เพิ่มคลินิก</button>
             </form>
 
         </div>
     );
-};
+}
 
 export default AddClinic;

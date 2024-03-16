@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { AuthContext } from '../contexts/AuthContext';
-import { useContext } from 'react';
-import { getProvinces, getDistrictsByProvince, searchClinics } from '../api/clinic'; // Assuming you have an API client
 
 
 function UserMenu({ user }) {
@@ -25,7 +23,7 @@ function UserMenu({ user }) {
             <div className="flex flex-col items-center ">
                 <Button className="btn btn-primary" onClick={() => navigate('/profile')}>ข้อมูลส่วนตัว</Button>
                 <Button className="btn btn-primary" onClick={() => navigate('/clinic/add')}>เพิ่มคลินิก</Button>
-                <Button className="btn btn-primary" onClick={() => navigate('/clinic/')}>แก้ไขคลินิก</Button>
+                <Button className="btn btn-primary" onClick={() => navigate('/edit-clinic/')}>แก้ไขคลินิก</Button>
                 <Button className="btn btn-primary" onClick={() => navigate('/settings')}>ตั้งค่า</Button>
                 <Button className="btn btn-primary" onClick={handleLogout}>ออกจากระบบ</Button>
             </div>

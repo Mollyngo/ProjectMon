@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getApprovedVisibleClinics } from '../api/clinic'; // Assuming you have an API client
+// import { getApprovedVisibleClinics } from '../api/clinic'; // Assuming you have an API client
 
 function UserSearchResult() {
     const location = useLocation();
@@ -32,8 +32,6 @@ function UserSearchResult() {
         }
         fetchClinics();
     }, [searchType, clinicName, provinceId, districtId]);
-
-    // ... JSX code with clinic list rendering and error handling ...
 
     return (
         <div>

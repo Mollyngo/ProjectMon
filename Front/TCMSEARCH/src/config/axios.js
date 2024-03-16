@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { getToken, removeToken, storeToken } from "../validators/localStorage";
-
-
+import { getToken, storeToken } from "../validators/localStorage";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;

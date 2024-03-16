@@ -1,10 +1,8 @@
 import { createContext, useState, useEffect } from 'react';
 
 import * as auth from '../api/auth';
-import * as user from '../api/user';
 import * as clinic from '../api/clinic';
 import { getToken, removeToken, storeToken } from '../validators/localStorage';
-
 
 export const AuthContext = createContext();
 
@@ -66,7 +64,6 @@ export default function AuthContextProvider({ children }) {
         }
     };
 
-    // ใน getClinicPageByUserAndAdmin, createClinic, editClinic
     const getClinicPageByUserAndAdmin = async () => {
         try {
             const token = getToken();

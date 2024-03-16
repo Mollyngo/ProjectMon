@@ -4,3 +4,11 @@ export const fetchAllUserByRole = role => axios.get(`/auth/user/${role}`);
 export const register = user => axios.post('/auth/register', user);
 export const login = credential => axios.post('/auth/login', credential);
 export const fetchUser = () => axios.get('/auth/user');
+
+export const visibilityClinic = (id, visibility) => axios.patch(`/clinic/visibility/${id}`, visibility);
+export const statusClinic = (id, status) => axios.patch(`/clinic/status/${id}`, status);
+
+// export const getAdmin = () => axios.get('/admin');
+// export const deleteClinicById = id => axios.delete(`/admin/delete/${id}`);
+// export const login = credential => axios.post('/auth/login', credential);
+// export const fetchUser = () => axios.get('/auth/user');

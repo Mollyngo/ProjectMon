@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-
+import { getClinicPageByGuest } from '../api/clinic';
 export default function SearchResult() {
     const [clinics, setClinics] = useState([]);
     const location = useLocation();
@@ -11,9 +10,9 @@ export default function SearchResult() {
 
     useEffect(() => {
         async function fetchData() {
-            // นำเข้าฟังก์ชันที่ทำการค้นหาคลินิกที่มีสถานะเป็น "APPROVED" และมีสถานะการแสดงผลเป็น "VISIBLE"
+           
 
-            const result = await getApprovedVisibleClinics(province, district, searchType);
+            const result = await getClinicPageByGuest(province, district, searchType);
             setClinics(result);
         }
         fetchData();
