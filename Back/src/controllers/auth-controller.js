@@ -17,7 +17,6 @@ exports.register = catchError(async (req, res, next) => {
     const payload = { userId: newUser.id, role: newUser.role };
     const accessToken = jwtService.sign(payload);
 
-
     res.status(201).json({ accessToken, newUser });
 
 });

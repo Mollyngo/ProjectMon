@@ -5,17 +5,35 @@ const catchError = require('../utills/catch-error');
 
 const jwt = require('jsonwebtoken');
 
-
-exports.getAllClinic = async (req, res, next) => {
+// ---------------------------guest---------------------------//
+exports.getAllVisibleClinic = async (req, res, next) => {
     try {
-        const result = await clinicService.getAllClinic();
+        const result = await clinicService.getApprovedVisibleClinics();
         res.status(200).json(result);
-
+    } catch (error) {
+        console.error(error);
+    }
+}
+exports.getGuestClinicById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await clinicService.getApprovedVisibleClinicsById(id);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+    }
+}
+exports.searchResult = async (req, res, next) => {
+    try {
+        const { query } = req.query;
+        const result = await clinicService.getApprovedVisibleClinics(query);
+        res.status(200).json(result);
     } catch (error) {
         console.error(error);
     }
 }
 
+//--------------------------user-----------------------------//
 exports.addClinic = async (req, res, next) => {
     try {
         const { name, mobile, working_hour, website, service, others, photo } = req.body;
@@ -38,8 +56,7 @@ exports.addClinic = async (req, res, next) => {
         }, user_id);
         console.log(createError)
         console.log(catchError)
-        console.log(req.body)
-        console.log(newClinic);
+
         res.status(200).json({ clinic: newClinic });
     } catch (error) {
         console.error(error);
@@ -53,14 +70,14 @@ exports.updatedClinic = async (req, res, next) => {
         const user_id = req.user_id;
         const updatedClinic = await clinicService.editClinic({
             id,
-            name,
-            mobile,
-            working_hour,
-            website,
-            service,
-            others,
-            photo,
-            district_id
+            name: name || undefined, // กำหนดค่าเป็น undefined ถ้าไม่ได้รับค่ามา
+            mobile: mobile || undefined,
+            working_hour: working_hour || undefined,
+            website: website || undefined,
+            service: service || undefined,
+            others: others || undefined,
+            photo: photo || undefined,
+            district_id: district_id || undefined
         });
         console.log(updatedClinic);
         res.status(200).json(updatedClinic);
@@ -68,7 +85,6 @@ exports.updatedClinic = async (req, res, next) => {
         console.error(error);
     }
 }
-
 exports.deletedClinic = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -82,7 +98,6 @@ exports.deletedClinic = async (req, res, next) => {
             }
             res.status(200).json({ deletedClinic, message: "Clinic deleted successfully" });
         }
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error deleting clinic" });
@@ -100,12 +115,43 @@ exports.searchClinic = async (req, res, next) => {
     }
 }
 
-exports.searchResult = async (req, res, next) => {
+exports.getClinicById = async (req, res, next) => {
     try {
-        const { query } = req.query;
-        const result = await clinicService.getApprovedVisibleClinics(query);
+        const { id } = req.params;
+        const result = await clinicService.getAllClinicIncludeProvinceById(id);
         res.status(200).json(result);
     } catch (error) {
         console.error(error);
     }
 }
+exports.getClinicByProvince = async (req, res, next) => {
+    try {
+        const result = await clinicService.getAllClinicIncludeProvince();
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//----------------Admin-----------------------
+exports.updateClinicVisibility = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { visibility } = req.body;
+        const result = await clinicService.updateClinicVisibility(id, visibility);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+    }
+}
+exports.updateClinicStatus = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+        const result = await clinicService.updateClinicStatus(id, status);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+    }
+}
+

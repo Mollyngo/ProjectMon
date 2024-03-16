@@ -5,18 +5,25 @@ const authenticate = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.post('/add', authenticate, clinicController.addClinic);
+//-----------guest---------------//
+router.get('/all', clinicController.getAllVisibleClinic);
+router.get('/all/:id', clinicController.getGuestClinicById)
 router.get('/search', clinicController.searchClinic);
-router.patch('/:id', authenticate, clinicController.updatedClinic);
+
+//-----------USER----------------//
+router.post('/add', authenticate, clinicController.addClinic);
+router.patch('/edit/:id', authenticate, clinicController.updatedClinic);
 router.delete('/:id', authenticate, clinicController.deletedClinic);
-router.get('/district', SearchController.getAllDistrict);
+
+router.get('/', clinicController.getClinicByProvince);
+router.get('/search/:id', clinicController.getClinicById);
 
 router.get('/province', SearchController.getAllProvince);
+router.get('/district', SearchController.getAllDistrict);
 
-
-router.get('/', SearchController.getAllClinic);
-
-
+//----------------ADMIN--------------//
+router.patch('/visibility/:id', authenticate, clinicController.updateClinicVisibility)
+router.patch('/status/:id', authenticate, clinicController.updateClinicStatus);
 
 
 module.exports = router;
