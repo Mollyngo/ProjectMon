@@ -1,7 +1,6 @@
 const express = require("express");
 const authRoute = require('./src/routes/auth-route')
 const clinicRoute = require('./src/routes/clinic-route')
-const authenticate = require("./src/middlewares/authMiddleware");
 const notFound = require("./src/middlewares/notFound");
 const error = require("./src/middlewares/error");
 const userRoute = require('./src/routes/user-route')

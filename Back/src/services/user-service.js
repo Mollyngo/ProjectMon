@@ -39,13 +39,8 @@ exports.getUserInfoByRole = async (req, res) => {
     }
 }
 
-exports.findUserById = async (id) => {
-    return await prisma.user.findUnique({
-        where: {
-            id
-        }
-    })
-}
+exports.findUserById = id => prisma.user.findUnique({ where: { id } });
+
 
 exports.createUser = async (user) => {
     return await prisma.user.create({

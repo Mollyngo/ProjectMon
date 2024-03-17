@@ -67,7 +67,6 @@ exports.createClinic = async (clinicData, user_id) => {
     }
 };
 exports.editClinic = async (clinicData) => {
-    console.log(clinicData);
     try {
         const dataToUpdate = {};
 
@@ -75,49 +74,49 @@ exports.editClinic = async (clinicData) => {
             dataToUpdate.name = clinicData.name;
         }
 
-        // ตรวจสอบและกำหนดค่า mobile, working_hour, website, service, others, photo ตามลำดับ
-        if (clinicData.mobile !== undefined) {
+        if (clinicData.mobile) {
             dataToUpdate.info = {
-                ...dataToUpdate.info,
-                mobile: clinicData.mobile,
+                update: {
+                    mobile: clinicData.mobile,
+                },
             };
         }
 
-        if (clinicData.working_hour !== undefined) {
+        if (clinicData.working_hour) {
             dataToUpdate.info = {
-                ...dataToUpdate.info,
-                working_hour: clinicData.working_hour,
+                update: {
+                    working_hour: clinicData.working_hour,
+                },
             };
         }
-
-        if (clinicData.website !== undefined) {
+        if (clinicData.website) {
             dataToUpdate.info = {
-                ...dataToUpdate.info,
-                website: clinicData.website,
+                update: {
+                    website: clinicData.website,
+                }
             }
         }
-
-        if (clinicData.service !== undefined) {
+        if (clinicData.service) {
             dataToUpdate.info = {
-                ...dataToUpdate.info,
-                service: clinicData.service,
+                update: {
+                    service: clinicData.service,
+                }
             }
         }
-
-        if (clinicData.others !== undefined) {
+        if (clinicData.others) {
             dataToUpdate.info = {
-                ...dataToUpdate.info,
-                others: clinicData.others,
+                update: {
+                    others: clinicData.others,
+                }
             }
         }
-
-        if (clinicData.photo !== undefined) {
+        if (clinicData.photo) {
             dataToUpdate.info = {
-                ...dataToUpdate.info,
-                photo: clinicData.photo,
+                update: {
+                    photo: clinicData.photo,
+                }
             }
         }
-
         if (clinicData.district_id) {
             dataToUpdate.district = {
                 connect: {
@@ -125,18 +124,20 @@ exports.editClinic = async (clinicData) => {
                 },
             };
         }
-
         return await prisma.clinic.update({
             where: {
-                id: parseInt(clinicData.id),
+                id: +clinicData.id,
             },
             data: dataToUpdate,
         });
+        console.log(clinicData);
     } catch (error) {
         console.error("Error updating clinic:", error);
         throw error;
     }
 };
+
+
 exports.deleteClinic = async (id) => {
     try {
         return await prisma.clinic.delete({
@@ -177,7 +178,7 @@ exports.getAllClinicIncludeProvince = async () => {
         }
     });
 }
-//--------------------------------Admin----------
+//--------------------------------Admin----------//
 
 exports.updateClinicVisibility = async (id, visibility) => {
     try {

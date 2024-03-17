@@ -1,11 +1,9 @@
-
-
-const createError = (status, message) => {
-    const error = new Error();
-    error.status = status;
-    error.message = message;
-    return error;
-    console.log(error)
+const createError = (message, statusCode) => {
+    console.log("errMsg", message);
+    const err = new Error(message);
+    // console.log(err);
+    err.statusCode = 400;
+    throw err;
 }
 
-module.exports = createError
+module.exports = createError;

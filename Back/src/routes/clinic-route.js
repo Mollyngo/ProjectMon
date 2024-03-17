@@ -12,7 +12,9 @@ router.get('/search', clinicController.searchClinic);
 
 //-----------USER----------------//
 router.post('/add', authenticate, clinicController.addClinic);
+// router.patch('/edit/:id', authenticate, clinicController.updatedClinic);
 router.patch('/edit/:id', authenticate, clinicController.updatedClinic);
+
 router.delete('/:id', authenticate, clinicController.deletedClinic);
 
 router.get('/', clinicController.getClinicByProvince);

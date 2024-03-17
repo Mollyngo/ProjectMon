@@ -70,14 +70,14 @@ exports.updatedClinic = async (req, res, next) => {
         const user_id = req.user_id;
         const updatedClinic = await clinicService.editClinic({
             id,
-            name: name || undefined, // กำหนดค่าเป็น undefined ถ้าไม่ได้รับค่ามา
-            mobile: mobile || undefined,
-            working_hour: working_hour || undefined,
-            website: website || undefined,
-            service: service || undefined,
-            others: others || undefined,
-            photo: photo || undefined,
-            district_id: district_id || undefined
+            name,
+            mobile,
+            working_hour,
+            website,
+            service,
+            others,
+            photo,
+            district_id
         });
         console.log(updatedClinic);
         res.status(200).json(updatedClinic);
@@ -85,6 +85,12 @@ exports.updatedClinic = async (req, res, next) => {
         console.error(error);
     }
 }
+
+
+
+
+
+
 exports.deletedClinic = async (req, res, next) => {
     try {
         const { id } = req.params;

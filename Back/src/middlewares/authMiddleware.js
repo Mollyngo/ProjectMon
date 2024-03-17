@@ -25,8 +25,6 @@ const authenticate = catchError(async (req, res, next) => {
         req.user = user;
         req.user_id = decodedPayload.user_id
 
-
-
         console.log(req.user)
 
 
@@ -39,4 +37,3 @@ const authenticate = catchError(async (req, res, next) => {
 
 
 module.exports = authenticate
-
