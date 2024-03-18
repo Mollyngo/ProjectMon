@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
-import { AuthContext } from '../contexts/AuthContext';
+import Button from '../../components/Button';
+import { AuthContext } from '../../contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 export default function AdminMenu() {
 

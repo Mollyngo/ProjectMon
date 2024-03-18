@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import useAuth from "../hooks/use-auth";
-import Input from "../components/Input";
-import Button from "../components/Button";
+import useAuth from "../../hooks/use-auth";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
-import validateLogin from "../validators/validateLogin";
+import validateLogin from "../../validators/validateLogin";
 
 
 export default function Login() {

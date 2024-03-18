@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
-import validateRegister from '../validators/validate-register';
-import useAuth from '../hooks/use-auth';
-import Input from '../components/Input';
-import Button from '../components/Button';
+import validateRegister from '../../validators/validate-register';
+import useAuth from '../../hooks/use-auth';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 const initial = {
     email: '',

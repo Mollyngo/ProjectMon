@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getClinicPageByGuest } from '../api/clinic';
+import { getClinicPageByGuest } from '../../api/clinic';
 
 export default function SearchResult() {
     const [clinics, setClinics] = useState([]);

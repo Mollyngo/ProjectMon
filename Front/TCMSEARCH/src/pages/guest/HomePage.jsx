@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import head from '../assets/head.png';
-import { getProvinces, getDistricts, getClinicPageByGuest } from '../api/clinic';
-import SearchClinicByProvince from '../features/SearchClinicByProvince';
+import head from '../../assets/head.png';
+import { getProvinces, getDistricts, getClinicPageByGuest } from '../../api/clinic';
+import SearchClinicByProvince from '../../features/SearchClinicByProvince';
 
 export default function HomePage() {
     const [province, setProvince] = useState('');

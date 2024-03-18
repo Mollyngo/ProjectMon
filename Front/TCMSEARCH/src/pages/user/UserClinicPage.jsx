@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-// import { searchClinics } from '../api/clinic';
-import { getDistricts } from '../api/clinic';
+// import { searchClinics } from '../../api/clinic';
 
 
 const UserClinicPage = () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getClinicPageByGuest } from "../api/clinic";
-import useAuth from "../hooks/use-auth";
+import { getClinicPageByGuest } from "../../api/clinic";
+import useAuth from "../../hooks/use-auth";
 
 function ClinicGuestList() {
     const [clinics, setClinics] = useState([]);
@@ -37,7 +37,7 @@ function ClinicGuestList() {
                                 <td>{clinic.district.name}</td>
                                 <td>{clinic.district.province.name}</td>
                                 <td>{clinic.info.mobile}</td>
-                                <td>
+                                <td className="text-center">
                                     <Link to={`/clinic-page/${clinic.id}`}>รายละเอียดเพิ่มเติม</Link>
                                 </td>
                             </tr>

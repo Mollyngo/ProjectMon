@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllClinic } from "../api/clinic";
-import useAuth from "../hooks/use-auth";
+import { getAllClinic } from "../../api/clinic";
+import useAuth from "../../hooks/use-auth";
 
 function ClinicList() {
     const [clinics, setClinics] = useState([]);

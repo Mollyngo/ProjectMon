@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllClinic } from "../api/clinic";
-import useAuth from "../hooks/use-auth";
-import { statusClinic, visibilityClinic } from "../api/auth";
+import { getAllClinic } from "../../api/clinic";
+import useAuth from "../../hooks/use-auth";
+import { statusClinic, visibilityClinic } from "../../api/auth";
 
 export default function AdminClinicList() {
     const [clinics, setClinics] = useState([]);

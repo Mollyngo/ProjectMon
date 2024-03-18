@@ -1,22 +1,24 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
+import Login from "../pages/guest/Login";
+import Register from "../pages/guest/Register";
 import useAuth from "../hooks/use-auth";
 import Search from "../pages/Search";
-import UserMenu from "../pages/UserMenu";
-import UserSearchResult from "../pages/UserSearchResult";
-import UserClinicPage from "../pages/UserClinicPage";
-import AdminMenu from "../pages/AdminMenu";
-import AddClinic from "../pages/AddClinic";
-import EditClinic from "../pages/EditClinic";
-import ClinicPage from "../pages/ClinicPage";
-import SearchResult from "../pages/SearchResult";
-import ClinicList from "../pages/ClinicList";
-import AdminClinicList from "../pages/AdminClinicList";
-import HomePage from "../pages/HomePage";
-import ClinicGuestList from "../pages/ClinicGuestList";
+import UserMenu from "../pages/user/UserMenu";
+import UserSearchResult from "../pages/user/UserSearchResult";
+import UserClinicPage from "../pages/user/UserClinicPage";
+import AdminMenu from "../pages/Admin/AdminMenu";
+import AddClinic from "../pages/user/AddClinic";
+import EditClinic from "../pages/user/EditClinic"
+import ClinicPage from "../pages/guest/ClinicPage";
+import SearchResult from "../pages/guest/SearchResult"
+import ClinicList from "../pages/user/ClinicList"
+import AdminClinicList from "../pages/Admin/AdminClinicList"
+import HomePage from "../pages/guest/HomePage";
+import ClinicGuestList from "../pages/guest/ClinicGuestList";
+import UserProfile from "../pages/user/UserProfile";
+
 
 const userRoutes = [
     { path: "/user-menu", element: <UserMenu /> },
@@ -24,6 +26,7 @@ const userRoutes = [
     { path: "/user-clinic-page", element: <UserClinicPage /> },
     { path: "/clinic/edit/:clinic_id", element: <EditClinic /> },
     { path: "/clinic-list", element: <ClinicList /> },
+    { path: "/profile", element: <UserProfile /> },
 ];
 
 const adminRoutes = [

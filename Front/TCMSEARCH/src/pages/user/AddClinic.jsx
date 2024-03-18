@@ -1,7 +1,7 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createClinic } from '../api/clinic';
-import { getDistricts, getProvinces } from '../api/clinic'
+import { createClinic } from '../../api/clinic';
+import { getDistricts, getProvinces } from '../../api/clinic';
 
 
 function AddClinic() {
