@@ -51,18 +51,50 @@ exports.createUser = async (user) => {
     })
 }
 
-exports.updateUser = async (user) => {
+exports.updateUser = async (userData) => {
+    const dataToUpdate = {};
+
+    if (userData.first_name) {
+        dataToUpdate.first_name = userData.first_name;
+    }
+
+    if (userData.last_name) {
+        dataToUpdate.last_name = userData.last_name;
+    }
+
+    if (userData.mobile) {
+        dataToUpdate.mobile = userData.mobile;
+    }
+
+    if (userData.password) {
+        dataToUpdate.password = userData.password;
+    }
+
+    if (userData.email) {
+        dataToUpdate.email = userData.email;
+    }
+
+    if (userData.role) {
+        dataToUpdate.role = userData.role;
+    }
+    console.log(dataToUpdate)
     return await prisma.user.update({
         where: {
-            id: user.id
+            id: +userData.id
         },
-        data: user
+        data: dataToUpdate
     });
 }
 
-exports.updateUserById = (data, id) =>
-    prisma.user.update({ data, where: { id } });
+exports.deleteUser = async (id) => {
+    return await prisma.user.delete({
+        where: {
+            id: +id
+        }
+    })
+}
 
 exports.getAllUsers = async () => {
-    return await prisma.user.findUnique()
+    return await prisma.user.findMany({
+    })
 }

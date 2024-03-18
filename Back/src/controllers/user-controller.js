@@ -32,6 +32,17 @@ exports.deleteUser = catchError(async (req, res) => {
 })
 
 exports.updateUser = catchError(async (req, res) => {
-    const user = await userService.updateUser(req.params.id, req.body);
+    const { id } = req.params;
+    const { first_name, last_name, mobile, email, password, role }
+        = req.body;
+    const userData = await userService.updateUser({ id, first_name, last_name, email, mobile, password, role });
+    console.log(userData)
+    res.status(200).json(userData);
+})
+
+exports.updateUserById = catchError(async (req, res) => {
+    const { id } = req.params;
+    const { first_name, last_name, mobile, email, password, role } = req.body;
+    const Data = await userService.updateUserById({ id, first_name, last_name, mobile, email, password, role });
     res.status(200).json(user);
 })
