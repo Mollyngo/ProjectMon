@@ -11,6 +11,7 @@ export const getDistricts = () => axios.get('/clinic/district');
 
 
 export const getAllClinic = () => axios.get('/clinic');
-export const getClinicById = id => axios.get(`/clinic/${id}`)
+export const getClinicById = id => axios.get(`/clinic/search/${id}`)
+//--------------------Guest---------------------------//
 export const getClinicPageByGuest = () => axios.get('/clinic/all');
 export const getGuestClinicById = id => axios.get(`/clinic/all/${id}`)

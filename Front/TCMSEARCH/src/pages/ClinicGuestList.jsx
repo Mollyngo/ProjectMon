@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllClinic } from "../api/clinic";
+import { getClinicPageByGuest } from "../api/clinic";
 import useAuth from "../hooks/use-auth";
 
-function ClinicList() {
+function ClinicGuestList() {
     const [clinics, setClinics] = useState([]);
 
     useEffect(() => {
-        getAllClinic().then((data) => {
+        getClinicPageByGuest().then((data) => {
             console.log(data.data);
             setClinics(data.data);
             console.log(data);
@@ -15,17 +15,16 @@ function ClinicList() {
     }, []);
 
     return (
-        <div>
-            <h1>Clinic List</h1>
-            <table>
+        <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold text-center">Clinic List</h1>
+            <table className="table">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Province</th>
                         <th>District</th>
                         <th>Phone</th>
-                        <th>Email</th>
-                        <th>Website</th>
+
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -38,10 +37,8 @@ function ClinicList() {
                                 <td>{clinic.district.name}</td>
                                 <td>{clinic.district.province.name}</td>
                                 <td>{clinic.info.mobile}</td>
-                                <td>{clinic.info.email}</td>
-                                <td>{clinic.info.website}</td>
                                 <td>
-                                    <Link to={`/clinic/edit/${clinic.id}`}>Edit</Link>
+                                    <Link to={`/clinic-page/${clinic.id}`}>รายละเอียดเพิ่มเติม</Link>
                                 </td>
                             </tr>
                         ))
@@ -56,4 +53,4 @@ function ClinicList() {
     );
 }
 
-export default ClinicList;
+export default ClinicGuestList;

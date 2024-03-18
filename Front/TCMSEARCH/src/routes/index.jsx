@@ -16,11 +16,14 @@ import SearchResult from "../pages/SearchResult";
 import ClinicList from "../pages/ClinicList";
 import AdminClinicList from "../pages/AdminClinicList";
 import HomePage from "../pages/HomePage";
+import ClinicGuestList from "../pages/ClinicGuestList";
 
 const userRoutes = [
     { path: "/user-menu", element: <UserMenu /> },
     { path: "/user-search-result", element: <UserSearchResult /> },
     { path: "/user-clinic-page", element: <UserClinicPage /> },
+    { path: "/clinic/edit/:clinic_id", element: <EditClinic /> },
+    { path: "/clinic-list", element: <ClinicList /> },
 ];
 
 const adminRoutes = [
@@ -30,9 +33,8 @@ const adminRoutes = [
 
 const clinicRoutes = [
     { path: "/clinic/add", element: <AddClinic /> },
-    { path: "/clinic/edit/:clinic_id", element: <EditClinic /> },
-    { path: "/clinic-page", element: <ClinicPage /> },
-    { path: "/clinic-list", element: <ClinicList /> },
+    { path: "/clinic-page/:clinic_id", element: <ClinicPage /> },
+    { path: "/search-result", element: <ClinicGuestList /> },
 ];
 
 const Routes = () => {
@@ -44,7 +46,7 @@ const Routes = () => {
                 { path: "/", element: <HomePage /> },
                 { path: "/auth/login", element: <Login /> },
                 { path: "/auth/register", element: <Register /> },
-                { path: "/search", element: <Search /> },
+                { path: "/search-result?${searchParams.toString()} ", element: <SearchResult /> },
                 ...userRoutes,
                 ...adminRoutes,
                 ...clinicRoutes,

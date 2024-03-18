@@ -1,5 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getClinicPageByGuest } from '../api/clinic';
+
 export default function SearchResult() {
     const [clinics, setClinics] = useState([]);
     const location = useLocation();
@@ -10,45 +13,76 @@ export default function SearchResult() {
 
     useEffect(() => {
         async function fetchData() {
-           
+            try {
+                let filteredClinics = [];
+                const result = await getClinicPageByGuest();
 
-            const result = await getClinicPageByGuest(province, district, searchType);
-            setClinics(result);
+                // กรองคลินิกตามค่าที่รับมาจากหน้าอื่น
+                if (province && district && searchType) {
+                    filteredClinics = result.filter(clinic => {
+                        return clinic.district.province.name === province &&
+                            clinic.district.name === district &&
+                            clinic.name === searchType;
+                    });
+                } else if (province && district) {
+                    filteredClinics = result.filter(clinic => {
+                        return clinic.district.province.name === province &&
+                            clinic.district.name === district;
+                    });
+                } else if (province) {
+                    filteredClinics = result.filter(clinic => {
+                        return clinic.district.province.name === province;
+                    });
+                } else {
+                    filteredClinics = result; // ไม่มีการกรอง
+                }
+
+                setClinics(filteredClinics);
+            } catch (error) {
+                console.error('Error fetching clinics:', error);
+            }
         }
+
         fetchData();
     }, [province, district, searchType]);
 
+
+
     return (
-        <div>
-            <div>
-                <div className="overflow-x-auto mt-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-center">ผลการค้นหา</h1>
-                    </div>
-                    <table className="table">
-                        {/* head */}
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>ชื่อคลินิก</th>
-                                <th>อำเภอ</th>
-                                <th>จังหวัด</th>
+        <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold text-center">Clinic List</h1>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Province</th>
+                        <th>District</th>
+                        <th>Phone</th>
+
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {clinics.length > 0 ? (
+                        clinics.map((clinic) => (
+                            console.log(clinic),
+                            <tr key={clinic.id}>
+                                <td>{clinic.name}</td>
+                                <td>{clinic.district.name}</td>
+                                <td>{clinic.district.province.name}</td>
+                                <td>{clinic.info.mobile}</td>
+                                <td className="text-center">
+                                    <Link to={`/clinic-page/${clinic.id}`}>รายละเอียดเพิ่มเติม</Link>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {/* rows */}
-                            {clinics.map((clinic, index) => (
-                                <tr key={clinic.id}>
-                                    <th>{index + 1}</th>
-                                    <td>{clinic.name}</td>
-                                    <td>{clinic.district.name}</td>
-                                    <td>{clinic.district.province.name}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="7">No clinics available</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
         </div>
-    )
+    );
 }

@@ -9,16 +9,22 @@ import validateLogin from "../validators/validateLogin";
 
 export default function Login() {
     const { login, authUser } = useAuth();
+    const [err, setErr] = useState({});
     const [input, setInput] = useState({
         email: "",
         password: "",
     });
     const navigate = useNavigate();
 
+
     const handleSubmit = async (e) => {
-        e.preventDefault();
         try {
-            validateLogin(input);
+            e.preventDefault();
+            const validationError = validateLogin(input);
+            if (validationError) {
+                setErr(validationError);
+                return;
+            }
             await login(input);
             if (authUser) {
                 if (authUser.role === 'ADMIN') {
@@ -28,7 +34,7 @@ export default function Login() {
                 }
             }
         } catch (error) {
-            toast.error("เข้าสู่ระบบไม่สำเร็จ");
+            toast.error(err.response?.data.message);
             console.log(error);
         }
     };
@@ -48,7 +54,7 @@ export default function Login() {
                     <div className="text-center lg:text-left">
                         <h1 className="text-4xl font-bold">เข้าสู่ระบบ</h1>
                     </div>
-                    <div className="card shrink-0 w-full mt-5 shadow-2xl bg-base-100">
+                    <div className="card w-[400px] shrink-0 mt-5 shadow-2xl bg-base-100">
                         <form className="card-body" onSubmit={handleSubmit}>
                             <div className="form-control">
                                 <label className="label">
@@ -57,12 +63,12 @@ export default function Login() {
                                 <Input
                                     placeholder="email"
                                     name="email"
-                                    className="input input-bordered"
                                     value={input.email}
                                     onChange={handleChangeInput}
+                                    errorMessage={err.email}
                                 />
                             </div>
-                            <div className="form-control">
+                            <div className="form-control mb-8">
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
@@ -71,8 +77,9 @@ export default function Login() {
                                     name="password"
                                     placeholder="password"
                                     type="password"
-                                    className="input input-bordered"
                                     onChange={handleChangeInput}
+                                    errorMessage={err.password}
+
                                 />
                             </div>
                             <Button bg="green" type="submit" onClick={handleSubmit}>

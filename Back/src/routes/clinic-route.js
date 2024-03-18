@@ -10,6 +10,9 @@ router.get('/all', clinicController.getAllVisibleClinic);
 router.get('/all/:id', clinicController.getGuestClinicById)
 router.get('/search', clinicController.searchClinic);
 
+router.get('/province', SearchController.getAllProvince);
+router.get('/district', SearchController.getAllDistrict);
+
 //-----------USER----------------//
 router.post('/add', authenticate, clinicController.addClinic);
 router.patch('/edit/:id', authenticate, clinicController.updatedClinic);
@@ -17,8 +20,6 @@ router.delete('/:id', authenticate, clinicController.deletedClinic);
 router.get('/', clinicController.getClinicByProvince);
 router.get('/search/:id', clinicController.getClinicById);
 
-router.get('/province', SearchController.getAllProvince);
-router.get('/district', SearchController.getAllDistrict);
 
 //----------------ADMIN--------------//
 router.patch('/visibility/:id', authenticate, clinicController.updateClinicVisibility)

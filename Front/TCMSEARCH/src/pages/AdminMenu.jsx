@@ -16,7 +16,7 @@ export default function AdminMenu() {
         return <Navigate to="/admin-menu" />; // Redirect ไปหน้าหลัก
     }
     return (
-        <div className="admin-menu flex flex-col">
+        <div className="menu  rounded-box">
             <h1>เมนูผู้ดูแลระบบ</h1>
             <ul className="flex flex-col gap-5">
                 <Button className="btn btn-primary" onClick={() => navigate('/clinic/add')}>เพิ่มคลินิก</Button>

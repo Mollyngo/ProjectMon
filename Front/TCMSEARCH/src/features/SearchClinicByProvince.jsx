@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getProvinces, getDistricts, getAllClinic } from '../api/clinic'; // Assuming you have an API client
+import { getProvinces, getDistricts, getClinicPageByGuest } from '../api/clinic'; // Assuming you have an API client
 
 
-export default function SearchClinic() {
+export default function SearchClinicByProvince() {
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [province, setProvince] = useState('');
@@ -44,8 +44,8 @@ export default function SearchClinic() {
 
     async function fetchAllClinic() {
         try {
-            const result = await getAllClinic();
-            console.log(getAllClinic());
+            const result = await getClinicPageByGuest();
+            console.log(getClinicPageByGuest());
             setClinic(result.data.clinic);
         } catch (error) {
             console.error('Error fetching provinces:', error);
@@ -55,7 +55,7 @@ export default function SearchClinic() {
     useEffect(() => {
         const fetchAllClinicData = async () => {
             try {
-                const result = await getAllClinic();
+                const result = await getClinicPageByGuest();
                 setClinic(result.data.clinic);
             } catch (error) {
                 console.error('Error fetching clinics:', error);
@@ -63,8 +63,7 @@ export default function SearchClinic() {
         };
 
         fetchAllClinicData();
-    }, [province, district]); // ให้เรียก fetchAllClinicData เมื่อ province หรือ district เปลี่ยนแปลง
-
+    }, [province, district]);
 
     const handleSearchClinic = async () => {
         try {
@@ -97,7 +96,6 @@ export default function SearchClinic() {
             } else {
                 filteredClinics = [];
             }
-            // กรองคลินิกตามจังหวัดที่เลือก
             if (province) {
                 filteredClinics = filteredClinics.filter(clinicData => clinicData.district.province === province);
                 console.log(province)
@@ -121,41 +119,40 @@ export default function SearchClinic() {
     return (
         <div>
             <div>
-                <label className="form-control w-full max-w-full">
-                    <div className="label">
-                        <span className="label-text">จังหวัด</span>
-                    </div>
-                    <select
-                        className="select select-primary select-bordered join-item"
-                        value={province}
-                        onChange={(e) => setProvince(e.target.value)}
-                    >
-                        <option value="">เลือกจังหวัด</option>
-                        {provinces && provinces.map(province => (
-                            <option key={province.id} value={province.id}>{province.name}</option>
-                        ))}
-                    </select>
-                </label>
-                <label className="form-control w-full max-w-full">
-                    <div className="label">
-                        <span className="label-text">อำเภอ</span>
-                    </div>
-                    <select
-                        className="select select-primary select-bordered join-item"
-                        value={district}
-                        onChange={(e) => setDistrict(e.target.value)}
-                    >
-                        <option value="">เลือกอำเภอ</option>
-                        {districts && districts.map(district => (
-                            <option key={district.id} value={district.id}>{district.name}</option>
-                        ))}
-                    </select>
-                </label>
-                <button className="btn-primary btn" onClick={handleSearch}>ค้นหาคลินิก</button>
-
+                <form className="w-full" onSubmit={handleSearch}>
+                    <label className="form-control w-full max-w-full">
+                        <div className="label">
+                            <span className="label-text">จังหวัด</span>
+                        </div>
+                        <select
+                            className="select select-primary select-bordered join-item"
+                            value={province}
+                            onChange={(e) => setProvince(e.target.value)}
+                        >
+                            <option value="">เลือกจังหวัด</option>
+                            {provinces && provinces.map(province => (
+                                <option key={province.id} value={province.id}>{province.name}</option>
+                            ))}
+                        </select>
+                    </label>
+                    <label className="form-control w-full max-w-full">
+                        <div className="label">
+                            <span className="label-text">อำเภอ</span>
+                        </div>
+                        <select
+                            className="select select-primary select-bordered join-item"
+                            value={district}
+                            onChange={(e) => setDistrict(e.target.value)}
+                        >
+                            <option value="">เลือกอำเภอ</option>
+                            {districts && districts.map(district => (
+                                <option key={district.id} value={district.id}>{district.name}</option>
+                            ))}
+                        </select>
+                    </label>
+                    <button className="btn-primary mt-9 btn w-full mx-0" type='submit'>ค้นหาคลินิก</button>
+                </form>
             </div>
         </div>
     )
-
-
 }

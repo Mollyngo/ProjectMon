@@ -14,26 +14,30 @@ const initial = {
     mobile: '',
 }
 
-export default function Register({ onSuccess }) {
+export default function Register() {
 
     const [input, setInput] = React.useState(initial);
-    const [error, setError] = React.useState(null);
+    const [error, setError] = React.useState({});
     const { register } = useAuth();
 
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
-            validateRegister(input);
-            const result = await register(input);
-            if (result.success) {
-                onSuccess();
-                toast.success("สมัครสมาชิกสำเร็จ");
-            } else {
-                setError(result.message);
-                toast.error("สมัครสมาชิกไม่สำเร็จ");
+            const validationError = validateRegister(input);
+            if (validationError) {
+                setError(validationError);
+                return setError(validationError);
             }
-        } catch (error) {
-            return error.response.data;
+            console.log("input: ", input);
+
+            await register(input);
+            toast.success("Register Successfully");
+        } catch (err) {
+            if (err.response.data.message === "EMAIL_MOBILE_IN_USE") {
+                setError({ emailOrMobile: "already in use" })
+            }
+            console.log("error: ", err);
+            toast.error(err.response?.data.message);
         }
     }
 
@@ -54,7 +58,6 @@ export default function Register({ onSuccess }) {
                         </label>
                         <div className="mt-2.5">
                             <Input
-                                type="text"
                                 name="first_name"
                                 value={input.first_name}
                                 onChange={handleChangeInput}
@@ -68,7 +71,6 @@ export default function Register({ onSuccess }) {
                         </label>
                         <div className="mt-2.5">
                             <Input
-                                type="text"
                                 name="last_name"
                                 value={input.last_name}
                                 onChange={handleChangeInput}
@@ -120,7 +122,7 @@ export default function Register({ onSuccess }) {
                     </div>
                 </div>
                 <br />
-                <button className="w-full bg-purple-300 p-2 round-xl" type="submit"  >
+                <button className="w-full bg-purple-300 p-2 round-xl" type='submit'  >
                     สมัครสมาชิก
                 </button>
             </form >

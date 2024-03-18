@@ -32,6 +32,8 @@ export default function AuthContextProvider({ children }) {
     const register = async (user) => {
         try {
             const response = await auth.register(user);
+
+            console.log(response)
             setAuthUser(response.data.newUser);
             storeToken(response.data.accessToken);
         } catch (error) {
