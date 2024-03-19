@@ -1,17 +1,14 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProvinces, getDistricts, getClinicPageByGuest } from '../api/clinic'; // Assuming you have an API client
-
 
 export default function SearchClinicByProvince() {
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [province, setProvince] = useState('');
     const [district, setDistrict] = useState('');
-    const [type, setType] = useState('');
-    const [clinicName, setClinicName] = useState('');
+    const navigate = useNavigate();
     const [clinic, setClinic] = useState([]);
-
 
     async function fetchProvinces() {
         try {
@@ -42,16 +39,6 @@ export default function SearchClinicByProvince() {
         }
     }, [province]);
 
-    async function fetchAllClinic() {
-        try {
-            const result = await getClinicPageByGuest();
-            console.log(getClinicPageByGuest());
-            setClinic(result.data.clinic);
-        } catch (error) {
-            console.error('Error fetching provinces:', error);
-        }
-    }
-
     useEffect(() => {
         const fetchAllClinicData = async () => {
             try {
@@ -65,56 +52,19 @@ export default function SearchClinicByProvince() {
         fetchAllClinicData();
     }, [province, district]);
 
-    const handleSearchClinic = async () => {
+    const handleSearch = (e) => {
+        e.preventDefault(); // Prevent form submission
         try {
-            let results;
-            const searchParams = new URLSearchParams();
-            if (type === 'clinic') {
-                if (clinicName) {
-                    searchParams.set('clinic_name', clinicName);
-                }
-            } else if (type === 'province') {
-                if (province) {
-                    searchParams.set('province', province);
-                }
-            } else if (type === 'district') {
-                if (district) {
-                    searchParams.set('district', district);
-                }
-            }
-        } catch (error) {
-            console.error('Error searching clinics:', error);
-        }
-    }
+            // Encode province and district values to be passed in URL
+            const encodedProvince = encodeURIComponent(province);
+            const encodedDistrict = encodeURIComponent(district);
 
-    const handleSearch = () => {
-        try {
-
-            let filteredClinics;
-            if (clinic) {
-                filteredClinics = [...clinic]
-            } else {
-                filteredClinics = [];
-            }
-            if (province) {
-                filteredClinics = filteredClinics.filter(clinicData => clinicData.district.province === province);
-                console.log(province)
-            }
-
-            // กรองคลินิกตามอำเภอที่เลือก (หากมีการเลือก)
-            if (district) {
-                filteredClinics = filteredClinics.filter(clinicData => clinicData.district_id === district);
-                console.log(filteredClinics)
-            }
-
-            setClinic(filteredClinics); // ตั้งค่ารายชื่อคลินิกใน state clinic
-
+            // Redirect to ClinicGuestList page with province and district parameters
+            navigate(`/search-result/${encodedProvince}/${encodedDistrict}`);
         } catch (error) {
             console.error('Error searching clinics:', error);
         }
     };
-
-
 
     return (
         <div>
@@ -154,5 +104,5 @@ export default function SearchClinicByProvince() {
                 </form>
             </div>
         </div>
-    )
+    );
 }

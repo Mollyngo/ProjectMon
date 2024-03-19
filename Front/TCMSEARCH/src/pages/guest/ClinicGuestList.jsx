@@ -1,18 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getClinicPageByGuest } from "../../api/clinic";
-import useAuth from "../../hooks/use-auth";
 
 function ClinicGuestList() {
+    const { province, district } = useParams();
     const [clinics, setClinics] = useState([]);
 
     useEffect(() => {
-        getClinicPageByGuest().then((data) => {
-            console.log(data.data);
-            setClinics(data.data);
-            console.log(data);
-        });
-    }, []);
+        const fetchClinicPageByGuest = async (province, district) => {
+            try {
+                const result = await getClinicPageByGuest(province, district);
+                console.log(result.data);
+                return result.data;
+            } catch (error) {
+                console.error('Error fetching clinics:', error);
+                return [];
+            }
+        };
+
+        const fetchClinics = async () => {
+            try {
+                const result = await fetchClinicPageByGuest(province, district);
+                const filteredClinics = result.filter((clinic) => {
+                    // กรองคลินิกที่ตรงกับ district และ province ที่ระบุ (ถ้ามีทั้ง province และ district)
+                    if (province && district) {
+                        return clinic.district.province.id === Number(province) &&
+                            clinic.district.id === Number(district);
+                    }
+                    // กรองคลินิกที่ตรงกับ district ที่ระบุ (ถ้ามีเฉพาะ district)
+                    else if (district) {
+                        return clinic.district.id === Number(district);
+                    }
+                    // ไม่กรองเลย (ถ้าไม่มี province และ district)
+                    else {
+                        return true;
+                    }
+                });
+
+
+                setClinics(filteredClinics);
+            } catch (error) {
+                console.error('Error fetching clinics:', error);
+            }
+        };
+
+        fetchClinics();
+    }, [province, district]);
 
     return (
         <div className="container mx-auto p-4">
@@ -24,14 +57,12 @@ function ClinicGuestList() {
                         <th>Province</th>
                         <th>District</th>
                         <th>Phone</th>
-
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {clinics.length > 0 ? (
                         clinics.map((clinic) => (
-                            console.log(clinic),
                             <tr key={clinic.id}>
                                 <td>{clinic.name}</td>
                                 <td>{clinic.district.name}</td>
@@ -44,7 +75,7 @@ function ClinicGuestList() {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="7">No clinics available</td>
+                            <td colSpan="5">No clinics available</td>
                         </tr>
                     )}
                 </tbody>

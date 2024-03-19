@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllClinic } from "../../api/clinic";
-import useAuth from "../../hooks/use-auth";
 
-function ClinicList() {
+function ClinicList({ clinicName }) {
     const [clinics, setClinics] = useState([]);
 
     useEffect(() => {
         getAllClinic().then((data) => {
-            console.log(data.data);
-            setClinics(data.data);
-            console.log(data);
+            const filteredClinics = clinicName ? data.data.filter(clinic => clinic.name.includes(clinicName)) : data.data;
+            setClinics(filteredClinics);
         });
-    }, []);
+    }, [clinicName]);
 
     return (
         <div>
@@ -32,7 +30,6 @@ function ClinicList() {
                 <tbody>
                     {clinics.length > 0 ? (
                         clinics.map((clinic) => (
-                            console.log(clinic),
                             <tr key={clinic.id}>
                                 <td>{clinic.name}</td>
                                 <td>{clinic.district.name}</td>

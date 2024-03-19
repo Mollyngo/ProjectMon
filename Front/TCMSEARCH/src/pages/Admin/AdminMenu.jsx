@@ -21,7 +21,7 @@ export default function AdminMenu() {
             <ul className="flex flex-col gap-5">
                 <Button className="btn btn-primary" onClick={() => navigate('/clinic/add')}>เพิ่มคลินิก</Button>
                 <Button onClick={() => navigate('/admin-list')}> อนุมัติและแก้ไขคลินิก </Button>
-                <Button onClick={() => navigate('/clinic')}>ลบคลินิก </Button>
+                <Button onClick={() => navigate('/delete-clinic')}>ลบคลินิก </Button>
                 <Button onClick={() => navigate('/users')}>ดูข้อมูลผู้ใช้ </Button>
             </ul>
         </div >

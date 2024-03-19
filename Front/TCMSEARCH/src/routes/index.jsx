@@ -18,6 +18,8 @@ import AdminClinicList from "../pages/Admin/AdminClinicList"
 import HomePage from "../pages/guest/HomePage";
 import ClinicGuestList from "../pages/guest/ClinicGuestList";
 import UserProfile from "../pages/user/UserProfile";
+import ClinicGuestResultByName from "../pages/guest/ClinicGuestResultByName";
+import DeleteClinic from "../pages/Admin/DeleteClinic";
 
 
 const userRoutes = [
@@ -32,12 +34,14 @@ const userRoutes = [
 const adminRoutes = [
     { path: "/admin-menu", element: <AdminMenu /> },
     { path: "/admin-list", element: <AdminClinicList /> },
+    { path: "/delete-clinic", element: <DeleteClinic /> },
 ];
 
 const clinicRoutes = [
     { path: "/clinic/add", element: <AddClinic /> },
     { path: "/clinic-page/:clinic_id", element: <ClinicPage /> },
-    { path: "/search-result", element: <ClinicGuestList /> },
+    { path: "/search-result/:province/:district", element: <ClinicGuestList /> },
+    { path: "/search-name", element: <ClinicGuestResultByName /> },
 ];
 
 const Routes = () => {
