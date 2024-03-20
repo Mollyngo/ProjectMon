@@ -28,15 +28,15 @@ function DeleteClinic() {
 
     return (
         <div>
-            <h1>Delete Clinic</h1>
-            <table>
+            <h1 className="text-xl text-center p-4">ลบคลินิก</h1>
+            <table className="w-full">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Status</th>
                         <th>Visibility</th>
-                        <th>Actions</th>
+                        <th>ลบคลินิก</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,7 +46,7 @@ function DeleteClinic() {
                             <td>{clinic.name}</td>
                             <td>{clinic.status}</td>
                             <td>{clinic.visibility}</td>
-                            <td>
+                            <td className="text-red-400 underline">
                                 <button onClick={() => handleDelete(clinic)}>Delete</button>
                             </td>
                         </tr>

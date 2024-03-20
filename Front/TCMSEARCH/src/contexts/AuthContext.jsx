@@ -9,6 +9,7 @@ export const AuthContext = createContext();
 export default function AuthContextProvider({ children }) {
     const [authUser, setAuthUser] = useState(null);
     const [initialLoading, setInitialLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const token = getToken();
@@ -17,7 +18,9 @@ export default function AuthContextProvider({ children }) {
                 .fetchUser()
                 .then((response) => {
                     setAuthUser(response.data.user);
+                    console.log(response.data.user);
                 })
+                
                 .catch((error) => {
                     console.error('Error fetching user:', error);
                 })
@@ -46,16 +49,13 @@ export default function AuthContextProvider({ children }) {
         try {
             const response = await auth.login(credential);
             console.log(response)
-
             setAuthUser(response.data.user);
             storeToken(response.data.accessToken);
-
         } catch (error) {
             console.log(error);
         }
     };
 
-    // ใน logout
     const logout = async () => {
         try {
             await auth.logout();
@@ -95,6 +95,8 @@ export default function AuthContextProvider({ children }) {
             console.log(error);
         }
     };
+
+    console.log(authUser)
     return (
         <AuthContext.Provider
             value={{
@@ -111,8 +113,6 @@ export default function AuthContextProvider({ children }) {
             {children}
         </AuthContext.Provider>
     );
-
-
 
 }
 

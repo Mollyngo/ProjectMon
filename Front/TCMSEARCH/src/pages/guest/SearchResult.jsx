@@ -57,7 +57,7 @@ export default function SearchResult() {
                         <th>Name</th>
                         <th>Province</th>
                         <th>District</th>
-                        <th>Phone</th>
+                        {/* <th>Phone</th> */}
 
                         <th>Action</th>
                     </tr>
@@ -70,7 +70,7 @@ export default function SearchResult() {
                                 <td>{clinic.name}</td>
                                 <td>{clinic.district.name}</td>
                                 <td>{clinic.district.province.name}</td>
-                                <td>{clinic.info.mobile}</td>
+                                {/* <td>{clinic.info.mobile}</td> */}
                                 <td className="text-center">
                                     <Link to={`/clinic-page/${clinic.id}`}>รายละเอียดเพิ่มเติม</Link>
                                 </td>

@@ -25,21 +25,21 @@ export default function ClinicGuestResultByName() {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold text-center">Clinic List</h1>
+            <h1 className="text-2xl font-bold text-center m-4">ค้นหาจากชื่อคลินิก</h1>
             <input
                 type="text"
                 className="input input-primary w-full max-w-full join-item"
                 placeholder="ค้นหาจากชื่อคลินิก"
                 onChange={(e) => filterClinicsByName(e.target.value)}
             />
-            <table className="table">
+            <table className="mt-5 w-full">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Province</th>
-                        <th>District</th>
-                        <th>Phone</th>
-                        <th>Action</th>
+                        <th>ชื่อคลินิก</th>
+                        <th>อำเภอ</th>
+                        <th>จังหวัด</th>
+                        {/* <th>Phone</th> */}
+                        {/* <th>Action</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -49,9 +49,9 @@ export default function ClinicGuestResultByName() {
                                 <td>{clinic.name}</td>
                                 <td>{clinic.district.name}</td>
                                 <td>{clinic.district.province.name}</td>
-                                <td>{clinic.info.mobile}</td>
-                                <td className="text-center">
-                                    <Link to={`/clinic-page/${clinic.id}`}>รายละเอียดเพิ่มเติม</Link>
+                                {/* <td>{clinic.info.mobile}</td> */}
+                                <td className="text-center text-red-400 underline">
+                                    <Link to={`/clinic-page/${clinic.id}`}>อื่นๆ</Link>
                                 </td>
                             </tr>
                         ))

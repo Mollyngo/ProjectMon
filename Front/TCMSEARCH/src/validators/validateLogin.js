@@ -12,6 +12,6 @@ const loginSchema = Joi.object({
     })
 })
 
-const validateLogin = input => validate(loginSchema)(input)
+const validateLogin = input => validate(loginSchema, input)
 
 export default validateLogin

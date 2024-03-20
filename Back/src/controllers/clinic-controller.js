@@ -2,7 +2,6 @@ const clinicService = require('../services/clinic-service');
 const prisma = require('../model/prisma');
 const createError = require('../utills/create-error');
 const catchError = require('../utills/catch-error');
-
 const jwt = require('jsonwebtoken');
 
 // ---------------------------guest---------------------------//
@@ -89,13 +88,10 @@ exports.updatedClinic = async (req, res, next) => {
 
 
 
-
-
-
 exports.deletedClinic = async (req, res, next) => {
     try {
         const { id } = req.params;
-        if (req.user.role !== 'USER') {
+        if (req.user.role !== 'ADMIN') {
             return res.status(403).json({ message: "You don't have permission to delete this clinic" });
         } else {
             const deletedClinic = await clinicService.deleteClinic(id);
@@ -143,20 +139,28 @@ exports.getClinicByProvince = async (req, res, next) => {
 //----------------Admin-----------------------
 exports.updateClinicVisibility = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const { visibility } = req.body;
-        const result = await clinicService.updateClinicVisibility(id, visibility);
-        res.status(200).json(result);
+        if (req.user.role !== 'ADMIN') {
+            return res.status(403).json({ message: "You don't have permission to delete this clinic" });
+        } else {
+            const { id } = req.params;
+            const { visibility } = req.body;
+            const result = await clinicService.updateClinicVisibility(id, visibility);
+            res.status(200).json(result);
+        }
     } catch (error) {
         console.error(error);
     }
 }
 exports.updateClinicStatus = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const { status } = req.body;
-        const result = await clinicService.updateClinicStatus(id, status);
-        res.status(200).json(result);
+        if (req.user.role !== 'ADMIN') {
+            return res.status(403).json({ message: "You don't have permission to delete this clinic" });
+        } else {
+            const { id } = req.params;
+            const { status } = req.body;
+            const result = await clinicService.updateClinicStatus(id, status);
+            res.status(200).json(result);
+        }
     } catch (error) {
         console.error(error);
     }

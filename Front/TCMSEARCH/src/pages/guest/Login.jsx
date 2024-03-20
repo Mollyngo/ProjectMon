@@ -54,7 +54,7 @@ export default function Login() {
                     <div className="text-center lg:text-left">
                         <h1 className="text-4xl font-bold">เข้าสู่ระบบ</h1>
                     </div>
-                    <div className="card w-[400px] shrink-0 mt-5 shadow-2xl bg-base-100">
+                    <div className="card w-full shrink-0 mt-5 shadow-2xl bg-base-100">
                         <form className="card-body" onSubmit={handleSubmit}>
                             <div className="form-control">
                                 <label className="label">

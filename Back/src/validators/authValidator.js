@@ -10,15 +10,18 @@ const registerSchema = Joi.object({
         'string.empty': 'last name is required',
         'any.required': 'last name is required'
     }),
-    email: Joi.string().email({ tlds: false }).required().messages({
-        'string.empty': "email is required",
-        "any.required": "email is required",
+    email: Joi.string().email({ tlds: false }).messages({
+        'alternatives.match': 'invalid email address ',
+        'any.required': 'email is required'
     }),
-    password: Joi.string().pattern(/^[a-zA-Z0-9]{4,}$/).required().messages({
-        'string.empty': "password is required",
-        "string.pattern.base": "password must be at least 6 characters and contain only alphabet and number",
-        "any.required": "password is required",
-    }),
+    password: Joi.string()
+        .pattern(/^[a-zA-Z0-9]{3,30}$/)
+        .required()
+        .messages({
+            "string.pattern.base": `Password should be between 3 to 30 characters and contain letters or numbers only`,
+            "string.empty": `Password cannot be empty`,
+            "any.required": `Password is required`,
+        }),
     mobile: Joi.string().messages({
         'string.empty': "mobile is required",
         "any.required": "mobile is required",

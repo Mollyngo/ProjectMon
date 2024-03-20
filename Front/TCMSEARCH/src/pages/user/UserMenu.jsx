@@ -15,16 +15,16 @@ function UserMenu({ user }) {
         navigate('/auth/login');
     };
     return (
-        <div className="menu  rounded-box flex flex-col gap-5" >
+        <div className="menu bg-white  rounded-lg shadow-lg p-4" >
             <div className="flex flex-col items-center">
                 {/* <img src={user.profile_picture} alt={user.name} /> */}
                 {/* <p>ชื่อผู้ใช้: {user.name}</p> */}
             </div>
             <div className="flex flex-col items-center ">
-                <Button bg="green" onClick={() => navigate('/profile')}>ข้อมูลส่วนตัว</Button>
+                <Button onClick={() => navigate('/profile')}>ข้อมูลส่วนตัว</Button>
                 <Button className="btn btn-primary" onClick={() => navigate('/clinic/add')}>เพิ่มคลินิก</Button>
                 <Button className="btn btn-primary" onClick={() => navigate('/clinic-list/')}>แก้ไขคลินิก</Button>
-                <Button className="btn btn-primary" onClick={() => navigate('/settings')}>ตั้งค่า</Button>
+                {/* <Button className="btn btn-primary" onClick={() => navigate('/settings')}>ตั้งค่า</Button> */}
                 <Button className="btn btn-primary" onClick={handleLogout}>ออกจากระบบ</Button>
             </div>
         </div>

@@ -24,17 +24,21 @@ export default function Register() {
         try {
             e.preventDefault();
             const validationError = validateRegister(input);
+
+            console.log(typeof validationError)
             if (validationError) {
+
                 setError(validationError);
                 return setError(validationError);
             }
-            console.log("input: ", input);
 
             await register(input);
+            console.log("input: ", input);
+            // console.log(register);
             toast.success("Register Successfully");
         } catch (err) {
-            if (err.response.data.message === "EMAIL_MOBILE_IN_USE") {
-                setError({ emailOrMobile: "already in use" })
+            if (err.response.data.message === "EMAIL_IN_USE") {
+                setError({ email: "already in use" })
             }
             console.log("error: ", err);
             toast.error(err.response?.data.message);
@@ -102,7 +106,7 @@ export default function Register() {
                                 name="password"
                                 value={input.password}
                                 onChange={handleChangeInput}
-                                errorMessage={error?.email}
+                                errorMessage={error?.password}
                             />
                         </div>
                     </div>

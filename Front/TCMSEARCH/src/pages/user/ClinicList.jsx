@@ -21,9 +21,9 @@ function ClinicList({ clinicName }) {
                         <th>Name</th>
                         <th>Province</th>
                         <th>District</th>
-                        <th>Phone</th>
+                        {/* <th>Phone</th>
                         <th>Email</th>
-                        <th>Website</th>
+                        <th>Website</th> */}
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -34,9 +34,9 @@ function ClinicList({ clinicName }) {
                                 <td>{clinic.name}</td>
                                 <td>{clinic.district.name}</td>
                                 <td>{clinic.district.province.name}</td>
-                                <td>{clinic.info.mobile}</td>
+                                {/* <td>{clinic.info.mobile}</td>
                                 <td>{clinic.info.email}</td>
-                                <td>{clinic.info.website}</td>
+                                <td>{clinic.info.website}</td> */}
                                 <td>
                                     <Link to={`/clinic/edit/${clinic.id}`}>Edit</Link>
                                 </td>

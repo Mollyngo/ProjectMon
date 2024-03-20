@@ -48,9 +48,6 @@ exports.login = catchError(async (req, res, next) => {
     res.status(200).json({ accessToken, user: existsUser });
 })
 
-exports.logout = catchError(async (req, res, next) => {
-    res.status(200).json({ message: 'Logged out successfully' });
-})
 exports.getUser = catchError(async (req, res, next) => {
     console.log("sssssssssssssssssssssssssssssss")
     res.status(200).json({ user: req.user });

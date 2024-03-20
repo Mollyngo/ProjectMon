@@ -15,6 +15,7 @@ export const SearchClinicByGuest = () => {
     const [district, setDistrict] = useState('');
     const [type, setType] = useState('');
     const [clinicName, setClinicName] = useState('');
+    const [clinic, setClinic] = useState([]);
 
 
     async function fetchProvinces() {

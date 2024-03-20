@@ -15,7 +15,7 @@ const UserClinicPage = () => {
                 setClinics(result);
             } catch (error) {
                 console.error('Error fetching clinics:', error);
-                setErrorMessage('เกิดข้อผิดพลาดในการดึงข้อมูลคลินิก'); // Handle errors gracefully
+                setErrorMessage('เกิดข้อผิดพลาดในการดึงข้อมูลคลินิก');
             }
         }
         fetchClinics();
@@ -23,7 +23,7 @@ const UserClinicPage = () => {
 
     return (
         <div>
-            <h1>คลินิกของฉัน</h1>
+            <h1>รายชื่อคลินิก</h1>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
             {clinics.map((clinic) => (
                 <div key={clinic.id}>

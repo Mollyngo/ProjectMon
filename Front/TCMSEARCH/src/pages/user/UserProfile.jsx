@@ -40,11 +40,11 @@ export default function UserProfile() {
 
     return (
         <div>
-            <h1>User Profile</h1>
+            <h1 className="text-center text-xl  pt-5">ข้อมูลส่วนตัว</h1>
             <div className="space-y-4">
-                <h2>Personal Information</h2>
+                <h2></h2>
                 <div className="flex flex-col">
-                    <label>First Name</label>
+                    <label>ชื่อ</label>
                     <Input
                         label="First Name"
                         name="first_name"
@@ -53,7 +53,7 @@ export default function UserProfile() {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label>Last Name</label>
+                    <label>นามสกุล</label>
                     <Input
                         label="Last Name"
                         name="last_name"
@@ -72,7 +72,7 @@ export default function UserProfile() {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label>Mobile</label>
+                    <label>เบอร์โทรศัพท์</label>
                     <Input
                         label="Mobile"
                         name="mobile"
@@ -80,7 +80,7 @@ export default function UserProfile() {
                         onChange={handleChange}
                     />
                 </div>
-                <Button bg="green" onClick={handleSubmit}>Save Changes</Button>
+                <Button bg="gray" onClick={handleSubmit}>บันทึก</Button>
             </div>
         </div>
     );

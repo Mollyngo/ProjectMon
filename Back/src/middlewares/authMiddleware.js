@@ -27,7 +27,6 @@ const authenticate = catchError(async (req, res, next) => {
 
         console.log(req.user)
 
-
         next();
     } catch (error) {
         console.error(error);

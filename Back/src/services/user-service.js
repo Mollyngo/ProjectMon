@@ -8,15 +8,6 @@ exports.findUserByEmail = async (email) => {
     });
 }
 
-exports.getAdminByEmail = async (email) => {
-    return await prisma.user.findFirst({
-        where: {
-            email,
-            role: 'ADMIN'
-        }
-    })
-}
-
 exports.getUserByEmail = async (email) => {
     return await prisma.user.findFirst({
         where: {

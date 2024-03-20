@@ -117,7 +117,7 @@ function EditClinic() {
             };
 
             // แก้ไขคลินิกโดยเรียกใช้ฟังก์ชัน editClinic โดยส่ง id ของคลินิกไปด้วย
-            const response = await editClinic(clinic.id, clinicData); // แก้ไขตรงนี้
+            const response = await editClinic(clinic.id, clinicData);
             console.log(clinicData);
             console.log(response);
 
@@ -144,7 +144,7 @@ function EditClinic() {
 
 
     return (
-        <div className="flex flex-col p-8">
+        <div className="flex flex-col w-full h-full p-8">
             <div className='pb-4'>
                 <h1>แก้ไขคลินิก</h1>
                 {clinic && (
@@ -208,7 +208,7 @@ function EditClinic() {
                             value={info?.others || ''}
                             onChange={(e) => setInfo({ ...info, others: e.target.value })}
                         />
-
+                        {/* 
                         <label htmlFor="province">จังหวัด:</label>
                         <select className="input input-bordered h-10" id="province" name="province" value={province_id} onChange={(e) => setProvince_id(e.target.value)}>
                             <option value="">เลือกจังหวัด</option>
@@ -227,7 +227,7 @@ function EditClinic() {
                                     {district.name}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
 
                         <button className="btn btn-primary" type="submit">แก้ไขคลินิก</button>
                     </form>
