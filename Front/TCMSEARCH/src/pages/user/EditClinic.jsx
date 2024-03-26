@@ -146,9 +146,9 @@ function EditClinic() {
     return (
         <div className="flex flex-col w-full h-full p-8">
             <div className='pb-4'>
-                <h1>แก้ไขคลินิก</h1>
+                <h1 className='text-center text-xl'>แก้ไขคลินิก</h1>
                 {clinic && (
-                    <form className="flex flex-col gap-4" onSubmit={handleEditClinic}>
+                    <form className="flex flex-col gap-2" onSubmit={handleEditClinic}>
                         <label htmlFor="name">ชื่อคลินิก:</label>
                         <input
                             className="input input-bordered h-10"

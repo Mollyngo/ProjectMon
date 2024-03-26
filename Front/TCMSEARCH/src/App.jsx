@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <div className="max-w-[360px]  m-auto">
+      <div className="max-w-[360px] h-screen m-auto">
         <div className="navbar navbar-primary bg-base-100">
           <div className="navbar-start">
           </div>
@@ -18,7 +18,9 @@ function App() {
           <div className="navbar-end">
           </div>
         </div>
-        <Routes />
+        <div className="h-[680px]  overflow-y-auto outline-violet-300">
+          <Routes />
+        </div>
       </div>
       <ToastContainer
         position="bottom-right"

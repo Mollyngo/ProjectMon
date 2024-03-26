@@ -71,8 +71,8 @@ function AddClinic() {
     };
 
     return (
-        <div className="max-w-xl py-5  m-auto">
-            <h1 className="text-2xl font-bold text-center gap-6">เพิ่มคลินิก</h1>
+        <div className="max-w-xl bg-[#f5f5f5] py-5  m-auto">
+            <h1 className="text-2xl font-bold text-center gap-5">เพิ่มคลินิก</h1>
             <form className='flex flex-col px-5' onSubmit={handleAddClinic}>
                 <label name="name">ชื่อคลินิก:</label>
                 <input className="input input-bordered h-10" type="text" id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} />
@@ -92,7 +92,7 @@ function AddClinic() {
                 <label name="others">อื่นๆ:</label>
                 <input className="input input-bordered h-10" type="text" id="others" name="others" value={info.others} onChange={(e) => setInfo({ ...info, others: e.target.value })} />
                 <br />
-                <label className="form-control w-full max-w-full">
+                <label className="form-control w-full max-w-full mb-4 ">
                     <div className="label">
                         <span className="label-text">จังหวัด</span>
                     </div>
@@ -127,6 +127,7 @@ function AddClinic() {
                 </label>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <button className="btn btn-primary mt-10" >เพิ่มคลินิก</button>
+                <button className='btn btn-secondary' onClick={() => navigate('/user-menu')} >ย้อนกลับ</button>
             </form>
 
         </div>

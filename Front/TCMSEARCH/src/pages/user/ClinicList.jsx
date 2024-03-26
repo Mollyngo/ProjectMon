@@ -14,17 +14,17 @@ function ClinicList({ clinicName }) {
 
     return (
         <div>
-            <h1>Clinic List</h1>
-            <table>
+            <h1 className="text-xl text-center p-4">รายชื่อคลินิก</h1>
+            <table className="w-full">
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Province</th>
-                        <th>District</th>
+                    <tr className="text-left">
+                        <th>ชื่อคลินิก</th>
+                        <th>เขต/อําเภอ</th>
+                        <th>จังหวัด</th>
                         {/* <th>Phone</th>
                         <th>Email</th>
                         <th>Website</th> */}
-                        <th>Action</th>
+                        <th>ข้อมูล</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,8 +37,8 @@ function ClinicList({ clinicName }) {
                                 {/* <td>{clinic.info.mobile}</td>
                                 <td>{clinic.info.email}</td>
                                 <td>{clinic.info.website}</td> */}
-                                <td>
-                                    <Link to={`/clinic/edit/${clinic.id}`}>Edit</Link>
+                                <td className="underline">
+                                    <Link to={`/clinic/edit/${clinic.id}`}>แก้ไข</Link>
                                 </td>
                             </tr>
                         ))

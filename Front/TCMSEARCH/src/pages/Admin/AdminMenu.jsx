@@ -24,7 +24,7 @@ export default function AdminMenu() {
 
     return (
         <div className="menu bg-white  rounded-lg shadow-lg p-4">
-            <h1 className="text-xl font-bold mb-4">เมนูผู้ดูแลระบบ</h1>
+            <h1 className="text-xl text-center underline font-bold mb-4">เมนูผู้ดูแลระบบ</h1>
             <ul className="flex flex-col gap-4">
                 <Button className="btn btn-primary" onClick={() => navigate('/clinic/add')}>
                     เพิ่มคลินิก
@@ -35,8 +35,8 @@ export default function AdminMenu() {
                 <Button onClick={() => navigate('/delete-clinic')} className="btn btn-secondary">
                     ลบคลินิก
                 </Button>
-                <Button onClick={() => navigate('/admin-user')} className="btn btn-secondary">
-                    ดูข้อมูลผู้ใช้
+                <Button onClick={() => navigate('/userlist')} className="btn btn-secondary">
+                    ดูรายชื่อผู้ใช้งาน
                 </Button>
                 <Button onClick={handleLogout} className="btn btn-secondary">
                     ออกจากระบบ

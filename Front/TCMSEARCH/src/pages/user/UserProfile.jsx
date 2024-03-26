@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { fetchUser, editUser } from "../../api/auth";
-import Button from "../../components/Button";
+import { useNavigate } from "react-router-dom";
 import Input from "../../components/Input";
 
 export default function UserProfile() {
-
+    const navigate = useNavigate()
     const [userData, setUserData] = useState({
         first_name: "",
         last_name: "",
@@ -80,7 +80,8 @@ export default function UserProfile() {
                         onChange={handleChange}
                     />
                 </div>
-                <Button bg="gray" onClick={handleSubmit}>บันทึก</Button>
+                <button className='btn btn-primary w-full' onClick={handleSubmit}>บันทึก</button>
+                <button className='btn btn-secondary w-full' onClick={() => navigate('/user-menu')} >ย้อนกลับ</button>
             </div>
         </div>
     );
